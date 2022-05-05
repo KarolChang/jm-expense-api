@@ -1,13 +1,28 @@
 import 'reflect-metadata'
-import { createConnection } from 'typeorm'
+import { createConnection, ConnectionOptions } from 'typeorm'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema, NonEmptyArray } from 'type-graphql'
 import express from 'express'
 import path from 'path'
+import dotenv from 'dotenv'
+dotenv.config()
 
 async function main() {
   const app = express()
-  await createConnection()
+
+  if (process.env.CLEARDB_DATABASE_URL) {
+    let config: ConnectionOptions = {
+      type: 'mysql',
+      synchronize: false,
+      logging: false,
+      entities: ['src/graphql/entity/**/*.ts']
+    }
+    Object.assign(config, { url: process.env.DATABASE_URL })
+    await createConnection(config)
+  } else {
+    await createConnection()
+  }
+
   const schema = await buildSchema({
     // resolvers: [
     //   __dirname + '@entity/**/*.query.ts',
