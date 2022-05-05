@@ -23,6 +23,8 @@ async function main() {
     await createConnection()
   }
 
+  console.log('======= success connection ========')
+
   const schema = await buildSchema({
     // resolvers: [
     //   __dirname + '@entity/**/*.query.ts',
