@@ -17,7 +17,7 @@ async function main() {
       logging: false,
       entities: ['src/graphql/entity/**/*.ts']
     }
-    Object.assign(config, { url: process.env.DATABASE_URL })
+    Object.assign(config, { url: process.env.CLEARDB_DATABASE_URL })
     await createConnection(config)
   } else {
     await createConnection()
