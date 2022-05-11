@@ -10,14 +10,18 @@ dotenv.config()
 async function main() {
   const app = express()
 
-  if (process.env.CLEARDB_DATABASE_URL) {
+  if (process.env.NODE_ENV === 'production') {
     let config: ConnectionOptions = {
       type: 'mysql',
       synchronize: false,
       logging: false,
-      entities: ['src/graphql/entity/**/*.js']
+      entities: ['dist/graphql/entity/**/*.js']
     }
-    Object.assign(config, { url: process.env.CLEARDB_DATABASE_URL })
+    Object.assign(config, {
+      url: process.env.CLEARDB_DATABASE_URL,
+      entities: ['dist/graphql/entity/**/*.js'],
+      seedingsSeed: ['dist/graphql/seed/*.js']
+    })
     await createConnection(config)
   } else {
     await createConnection()
@@ -26,7 +30,10 @@ async function main() {
   console.log('======= success connection ========')
 
   const schema = await buildSchema({
-    resolvers: [path.resolve('./src/graphql/entity/**/index.ts')] as NonEmptyArray<string>,
+    resolvers:
+      process.env.NODE_ENV === 'production'
+        ? ([path.resolve('./dist/graphql/entity/**/index.js')] as NonEmptyArray<string>)
+        : ([path.resolve('./src/graphql/entity/**/index.ts')] as NonEmptyArray<string>),
     dateScalarMode: 'isoDate', // 預設是 'isoDate'
     nullableByDefault: true,
     validate: false
