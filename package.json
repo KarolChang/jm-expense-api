@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "tsc",
     "build1": "tsc",
-    "start": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist/app.js",
+    "start": "TS_NODE_BASEURL=./dist node -r ./tsconfig-paths-bootstrap.js dist/app.js",
     "build2": "rimraf dist && tsc -p tsconfig.json",
     "dev": "NODE_ENV=development nodemon --config nodemon.json --exec npm run serve",
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
