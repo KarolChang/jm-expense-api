@@ -5,7 +5,7 @@ import { Notification } from '@entity/notification'
 
 @Resolver((of) => Notification)
 export class NotificationFieldResolver {
-  @FieldResolver()
+  @FieldResolver((type) => Event)
   async event(@Root() root: Notification): Promise<Event | undefined> {
     return await getRepository(Event)
       .createQueryBuilder('Event')

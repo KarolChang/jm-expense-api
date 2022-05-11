@@ -8,14 +8,16 @@ export class NotificationQuery {
 
   @Query((returns) => [Notification], { description: '依條件取得通知' })
   async notifications(@Arg('eventId') eventId?: number, @Arg('userId') userId?: number): Promise<Notification[]> {
-    const query = this.repo.leftJoin('Notification.events', 'events').leftJoin('events.user', 'user')
-    if (eventId) {
-      query.andWhere('events.id = :eventId', { eventId })
-    }
-    if (userId) {
-      query.andWhere('user.id = :userId', { userId })
-    }
-    return query.getMany()
+    // const query = this.repo.leftJoin('Notification.event', 'event')
+    // .leftJoin('event.user', 'user')
+    // if (eventId) {
+    //   query.andWhere('Notification.event.id = :eventId', { eventId })
+    // }
+    // if (userId) {
+    //   query.andWhere('user.id = :userId', { userId })
+    // }
+    // return query.getMany()
+    return this.repo.getMany()
   }
 
   @Query((returns) => Notification, { description: '依ID取得通知' })

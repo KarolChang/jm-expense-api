@@ -5,7 +5,7 @@ import { Event } from '@entity/event'
 
 @Resolver((of) => User)
 export class UserFieldResolver {
-  @FieldResolver()
+  @FieldResolver((type) => [Event])
   async events(@Root() root: User): Promise<Event[]> {
     return await getRepository(Event)
       .createQueryBuilder('Event')

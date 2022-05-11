@@ -23,13 +23,4 @@ export class User extends Basic {
 export class UserInput implements Partial<User> {
   @Field({ description: 'id' })
   id: number
-
-  @Field({ description: 'Email' })
-  email: string
-
-  @Field({ description: 'Line使用者ID' })
-  lineUserId: string
-
-  // @Field((type) => EventInput, { description: '事件' })
-  // events: Event[]
 }

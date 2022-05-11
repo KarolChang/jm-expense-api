@@ -2,32 +2,30 @@ import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@graphql/Basic'
 import { User, UserInput } from '@entity/user'
-import { Notification } from '@entity/notification'
+import { Notification, NotificationInput } from '@entity/notification'
+import { Bank, BankInput } from '@entity/bank'
 
 @Entity()
 @ObjectType({ description: '事件', implements: Basic })
 export class Event extends Basic {
-  @Column()
-  @Field({ description: '銀行' })
-  bank: string
+  // @Column()
+  // @Field({ description: '銀行' })
+  // bank: string
+
+  // @ManyToOne((type) => Bank, (bank) => bank.events)
+  @ManyToOne((type) => Bank)
+  @Field((type) => Bank, { description: '銀行機構' })
+  bank: Bank
 
   @Column()
-  @Field({ description: '卡名' })
-  card: string
-
-  @Column({ type: 'date', nullable: true })
-  @Field({ description: '結帳日' })
-  account_day: Date
-
-  @Column({ type: 'date', nullable: true })
-  @Field({ description: '繳費日' })
-  payment_day: Date
+  @Field({ description: '商品' })
+  item: string
 
   @ManyToOne((type) => User, (user) => user.events)
   @Field((type) => User, { description: '使用者' })
   user: User
 
-  @OneToMany((type) => Notification, (notif) => notif.event)
+  @OneToMany((type) => Notification, (notif) => notif.event, { cascade: true })
   @Field((type) => [Notification], { description: '通知' })
   notifications: Notification[]
 }
@@ -37,18 +35,15 @@ export class EventInput implements Partial<Event> {
   @Field({ description: 'id' })
   id: number
 
-  @Field({ description: '銀行' })
-  bank: string
+  @Field((type) => BankInput, { description: '銀行機構' })
+  bank: Bank
 
-  @Field({ description: '卡名' })
-  card: string
-
-  @Field({ description: '結帳日' })
-  account_day: Date
-
-  @Field({ description: '繳費日' })
-  payment_day: Date
+  @Field({ description: '商品' })
+  item: string
 
   @Field((type) => UserInput, { description: '使用者' })
   user: User
+
+  @Field((type) => [NotificationInput], { description: '通知' })
+  notifications: Notification[]
 }
