@@ -4,9 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build1": "tsc",
     "start": "node dist/app.js",
-    "build1": "rimraf dist && tsc -p tsconfig.json",
+    "build": "rimraf dist && tsc -p tsconfig.json",
     "dev": "NODE_ENV=development nodemon --config nodemon.json --exec npm run serve",
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
     "seed": "ts-node  -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
