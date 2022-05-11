@@ -2,10 +2,11 @@
   "name": "notif-api",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
-    "build1": "rimraf dist && tsc",
+    "build": "tsc",
     "start": "node dist/app.js",
-    "build": "rimraf dist && tsc -p tsconfig.json",
+    "build1": "rimraf dist && tsc -p tsconfig.json",
     "dev": "NODE_ENV=development nodemon --config nodemon.json --exec npm run serve",
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
     "seed": "ts-node  -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
