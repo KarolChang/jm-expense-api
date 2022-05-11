@@ -1,6 +1,6 @@
 import { Factory, Seeder } from 'typeorm-seeding'
 import { Connection } from 'typeorm'
-import { Bank } from '@entity/bank'
+import { Bank } from '../entity/bank'
 
 export default class CreateBanks implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
