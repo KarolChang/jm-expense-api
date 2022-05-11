@@ -13,11 +13,10 @@ async function main() {
   if (process.env.NODE_ENV === 'production') {
     let config: ConnectionOptions = {
       type: 'mysql',
-      synchronize: true,
-      logging: false,
-      entities: ['dist/graphql/entity/**/*.js'],
       url: process.env.CLEARDB_DATABASE_URL,
-      migrations: ['migration/**/js']
+      synchronize: true,
+      logging: true,
+      entities: ['dist/graphql/entity/**/*.js']
     }
     Object.assign(config, {
       // url: process.env.CLEARDB_DATABASE_URL,
