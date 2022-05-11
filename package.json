@@ -5,7 +5,6 @@
   "scripts": {
     "postinstall": "tsc",
     "start": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist/app.js",
-    "build-1": "rimraf dist && tsc -p tsconfig.json",
     "dev": "NODE_ENV=development nodemon --config nodemon.json --exec npm run serve",
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
     "seed": "ts-node  -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
