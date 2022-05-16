@@ -9,7 +9,7 @@
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
     "seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
     "seed:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register typeorm-seeding/dist/cli.js seed",
-    "seed:prod1": "TS_NODE_BASEURL=./dist node -r ./node_modules/typeorm-seeding/dist/cli.js seed",
+    "seed:prod1": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

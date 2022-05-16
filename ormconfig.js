@@ -4,5 +4,5 @@ module.exports = {
   synchronize: true,
   logging: false,
   entities: ['dist/graphql/entity/**/*.js'],
-  seeds: ['dist/seed/*.js']
+  seeds: ['dist/graphql/seed/*.js']
 }
