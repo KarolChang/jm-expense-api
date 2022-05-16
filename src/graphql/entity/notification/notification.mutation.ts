@@ -3,7 +3,7 @@ import { Resolver, Mutation, Arg } from 'type-graphql'
 import { Notification, NotificationInput } from '@entity/notification'
 import { ApolloError } from 'apollo-server-errors'
 
-@Resolver()
+@Resolver((of) => Notification)
 export class NotificationMutation {
   repo = getRepository(Notification)
 

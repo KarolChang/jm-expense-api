@@ -23,13 +23,16 @@ export class Notification extends Basic {
   @Field({ description: '訊息' })
   message: string
 
-  @ManyToOne((type) => Event, (event) => event.notifications)
+  @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete' })
   @Field((type) => Event, { description: '事件' })
   event: Event
 }
 
 @InputType({ description: '事件Input' })
 export class NotificationInput implements Partial<Notification> {
+  @Field({ description: 'id' })
+  id: number
+
   @Field({ description: '通知類型' })
   type: NotifTypeEnum
 

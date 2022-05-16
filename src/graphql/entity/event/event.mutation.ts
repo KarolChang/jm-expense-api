@@ -3,7 +3,7 @@ import { Resolver, Mutation, Arg } from 'type-graphql'
 import { Event, EventInput } from '@entity/event'
 import { ApolloError } from 'apollo-server-errors'
 
-@Resolver()
+@Resolver((of) => Event)
 export class EventMutation {
   repo = getRepository(Event)
 

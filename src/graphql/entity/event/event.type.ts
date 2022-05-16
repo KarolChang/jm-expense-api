@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@graphql/Basic'
 import { User, UserInput } from '@entity/user'

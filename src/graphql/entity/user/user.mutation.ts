@@ -3,7 +3,7 @@ import { Resolver, Mutation, Arg } from 'type-graphql'
 import { User, UserInput } from '@entity/user/user.type'
 import { ApolloError } from 'apollo-server-errors'
 
-@Resolver()
+@Resolver((of) => User)
 export class UserMutation {
   repo = getRepository(User)
 

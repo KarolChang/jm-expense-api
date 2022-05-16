@@ -10,8 +10,8 @@ dotenv.config()
 async function main() {
   const app = express()
 
-  const connect = await createConnection()
-  console.log('[connect]', connect)
+  await createConnection()
+  // console.log('[connect]', connect)
   // if (process.env.NODE_ENV === 'production') {
   // let config: ConnectionOptions = {
   //   type: 'mysql',
@@ -29,7 +29,7 @@ async function main() {
   //   await createConnection()
   // }
 
-  console.log('======= success connection ========')
+  console.log('======= db success connection ========')
 
   const schema = await buildSchema({
     resolvers:
@@ -39,7 +39,8 @@ async function main() {
     // ([path.resolve('./dist/graphql/entity/**/index{.js,.ts}')] as NonEmptyArray<string>)
     dateScalarMode: 'isoDate', // 預設是 'isoDate'
     nullableByDefault: true,
-    validate: false
+    validate: false,
+    emitSchemaFile: true
   })
   const server = new ApolloServer({ schema })
   await server.start()
