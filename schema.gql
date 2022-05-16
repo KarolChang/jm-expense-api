@@ -141,6 +141,18 @@ type Notification implements Basic {
   """通知時間"""
   notif_time: DateTime
 
+  """重複類型"""
+  repeatType: String
+
+  """tag顏色"""
+  tagColor: String
+
+  """tag文字"""
+  tagText: String
+
+  """文字顏色"""
+  textColor: String
+
   """通知類型"""
   type: String
 
@@ -177,7 +189,7 @@ type Query {
   banks: [Bank]
 
   """依ID取得事件"""
-  event(id: Float): Event
+  event(id: Float, userId: Float): Event
 
   """依條件取得所有事件"""
   events(userId: Float): [Event]

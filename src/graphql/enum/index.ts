@@ -10,3 +10,16 @@ registerEnumType(NotifTypeEnum, {
   name: 'NotifTypeEnum',
   description: '通知類型 enum'
 })
+
+export enum NotifRepeatTypeEnum {
+  never = 'never',
+  every_day = 'every_day',
+  every_week = 'every_week',
+  every_month = 'every_month',
+  every_year = 'every_year'
+}
+
+registerEnumType(NotifRepeatTypeEnum, {
+  name: 'NotifRepeatTypeEnum',
+  description: '重複類型 enum'
+})

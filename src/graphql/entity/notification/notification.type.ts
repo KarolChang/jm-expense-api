@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@graphql/Basic'
-import { NotifTypeEnum } from '@graphql/enum'
+import { NotifTypeEnum, NotifRepeatTypeEnum } from '@graphql/enum'
 import { Event } from '@entity/event'
 
 @Entity()
@@ -22,6 +22,22 @@ export class Notification extends Basic {
   @Column()
   @Field({ description: '訊息' })
   message: string
+
+  @Column({ type: 'enum', enum: NotifRepeatTypeEnum })
+  @Field({ description: '重複類型' })
+  repeatType: NotifRepeatTypeEnum
+
+  @Column({ length: 2 })
+  @Field({ description: 'tag文字' })
+  tagText: string
+
+  @Column()
+  @Field({ description: 'tag顏色' })
+  tagColor: string
+
+  @Column()
+  @Field({ description: '文字顏色' })
+  textColor: string
 
   @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete' })
   @Field((type) => Event, { description: '事件' })

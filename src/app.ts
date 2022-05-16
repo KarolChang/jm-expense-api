@@ -9,25 +9,7 @@ dotenv.config()
 
 async function main() {
   const app = express()
-
   await createConnection()
-  // console.log('[connect]', connect)
-  // if (process.env.NODE_ENV === 'production') {
-  // let config: ConnectionOptions = {
-  //   type: 'mysql',
-  //   synchronize: true,
-  //   logging: true,
-  //   entities: ['dist/graphql/entity/**/*.js'],
-  //   url: process.env.CLEARDB_DATABASE_URL
-  // }
-  // Object.assign(config, {
-  //   url: process.env.CLEARDB_DATABASE_URL,
-  //   seeds: ['dist/graphql/seed/*.js']
-  // })
-  //   await createConnection()
-  // } else {
-  //   await createConnection()
-  // }
 
   console.log('======= db success connection ========')
 

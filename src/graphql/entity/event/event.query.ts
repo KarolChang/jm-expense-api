@@ -16,7 +16,7 @@ export class EventQuery {
   }
 
   @Query((returns) => Event, { description: '依ID取得事件' })
-  async event(@Arg('id') id: number): Promise<Event | undefined> {
+  async event(@Arg('id') id: number, @Arg('userId') userId: number): Promise<Event | undefined> {
     return this.repo.findOneOrFail(id)
   }
 }
