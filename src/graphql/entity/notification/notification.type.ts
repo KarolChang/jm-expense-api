@@ -60,4 +60,16 @@ export class NotificationInput implements Partial<Notification> {
 
   @Field({ description: '訊息' })
   message: string
+
+  @Field({ description: '重複類型' })
+  repeatType: NotifRepeatTypeEnum
+
+  @Field({ description: 'tag文字' })
+  tagText: string
+
+  @Field({ description: 'tag顏色' })
+  tagColor: string
+
+  @Field({ description: '文字顏色' })
+  textColor: string
 }
