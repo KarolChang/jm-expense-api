@@ -5,12 +5,12 @@ import { Event } from '@entity/event'
 
 @Resolver((of) => User)
 export class UserFieldResolver {
-  @FieldResolver((type) => [Event])
-  async events(@Root() root: User): Promise<Event[]> {
-    return await getRepository(Event)
-      .createQueryBuilder('Event')
-      .leftJoin('Event.user', 'user')
-      .where('user.id = :userId', { userId: root.id })
-      .getMany()
-  }
+  // @FieldResolver((type) => [Event])
+  // async events(@Root() root: User): Promise<Event[]> {
+  //   return await getRepository(Event)
+  //     .createQueryBuilder('Event')
+  //     .leftJoin('Event.user', 'user')
+  //     .where('user.id = :userId', { userId: root.id })
+  //     .getMany()
+  // }
 }

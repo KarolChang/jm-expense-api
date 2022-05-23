@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
-import { Basic } from '@graphql/Basic'
+import { Basic } from '@entity/Basic'
 import { User, UserInput } from '@entity/user'
 import { Notification, NotificationInput } from '@entity/notification'
 import { Bank, BankInput } from '@entity/bank'

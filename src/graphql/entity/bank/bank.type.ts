@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
-import { Basic } from '@graphql/Basic'
+import { Basic } from '@entity/Basic'
 import { Event } from '@entity/event'
 
 @Entity()

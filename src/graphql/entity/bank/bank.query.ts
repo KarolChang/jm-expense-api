@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm'
-import { Resolver, Query, Arg } from 'type-graphql'
+import { Resolver, Query, Arg, Authorized } from 'type-graphql'
 import { Bank } from '@entity/bank'
 
 @Resolver((of) => Bank)
@@ -11,6 +11,7 @@ export class BankQuery {
     return this.repo.createQueryBuilder().getMany()
   }
 
+  @Authorized()
   @Query((returns) => Bank, { description: '依id取得銀行機構' })
   async bank(@Arg('id') id: number): Promise<Bank | undefined> {
     return this.repo.findOneOrFail(id)

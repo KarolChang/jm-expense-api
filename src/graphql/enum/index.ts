@@ -23,3 +23,13 @@ registerEnumType(NotifRepeatTypeEnum, {
   name: 'NotifRepeatTypeEnum',
   description: '重複類型 enum'
 })
+
+export enum UserRoleEnum {
+  admin = 'admin',
+  user = 'user'
+}
+
+registerEnumType(UserRoleEnum, {
+  name: 'UserRoleEnum',
+  description: '使用者角色 enum'
+})

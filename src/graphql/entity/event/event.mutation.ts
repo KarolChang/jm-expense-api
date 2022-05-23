@@ -1,20 +1,19 @@
-import { getRepository } from 'typeorm'
-import { Resolver, Mutation, Arg } from 'type-graphql'
-import { Event, EventInput } from '@entity/event'
+import { Resolver, Mutation, Arg, Authorized } from 'type-graphql'
+import { Event, EventInput, EventRepository, Repo } from '@entity/event'
 
 @Resolver((of) => Event)
 export class EventMutation {
-  repo = getRepository(Event)
-
+  @Authorized()
   @Mutation((returns) => Event, { description: '儲存事件' })
-  async saveEvent(@Arg('event') input: EventInput) {
-    let event = this.repo.create(input)
-    return await this.repo.save(event)
+  async saveEvent(@Repo() repo: EventRepository, @Arg('event') input: EventInput) {
+    let event = repo.create(input)
+    return await repo.save(event)
   }
 
+  @Authorized()
   @Mutation((returns) => Event, { description: '刪除事件' })
-  async removeEvent(@Arg('id') id: number) {
-    const event = await this.repo.findOneOrFail(id)
-    return this.repo.softRemove(event)
+  async removeEvent(@Repo() repo: EventRepository, @Arg('id') id: number) {
+    const event = await repo.findOneOrFail(id)
+    return repo.softRemove(event)
   }
 }

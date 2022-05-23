@@ -98,12 +98,33 @@ input EventInput {
   user: UserInput
 }
 
+"""Log"""
+type Log {
+  createdAt: DateTime
+  entityId: Float
+  entityJsonString: String
+  entityName: String
+  errorMessage: String
+  fieldName: String
+  id: Float
+  operationName: String
+  operationType: String
+  sqlAction: String
+  userDisplayName: String
+  userEmail: String
+  uuid: String
+  variablesJsonString: String
+}
+
 type Mutation {
   """刪除事件"""
   removeEvent(id: Float): Event
 
   """刪除通知"""
   removeNotification(id: Float): Notification
+
+  """刪除通知紀錄"""
+  removeNotifLog(id: Float): NotifLog
 
   """刪除使用者"""
   removeUser(id: Float): User
@@ -114,6 +135,9 @@ type Mutation {
   """儲存通知"""
   saveNotification(notification: NotificationInput): Notification
 
+  """儲存通知紀錄"""
+  saveNotifLog(notifLog: NotifLogInput): NotifLog
+
   """儲存使用者"""
   saveUser(user: UserInput): User
 }
@@ -122,6 +146,9 @@ type Mutation {
 type Notification implements Basic {
   """Create Date Time"""
   createdAt: DateTime
+
+  """cron時間字串"""
+  cronTimeString: String
 
   """Delete Date Time"""
   deleteAt: DateTime
@@ -141,6 +168,9 @@ type Notification implements Basic {
   """通知時間"""
   notif_time: DateTime
 
+  """通知紀錄"""
+  notifLogs: [NotifLog]
+
   """重複類型"""
   repeatType: String
 
@@ -156,11 +186,14 @@ type Notification implements Basic {
   """通知類型"""
   type: String
 
+  """uid"""
+  uid: String
+
   """Update Date Time"""
   updatedAt: DateTime
 }
 
-"""事件Input"""
+"""通知Input"""
 input NotificationInput {
   """發生時間"""
   happened_time: DateTime
@@ -188,6 +221,51 @@ input NotificationInput {
 
   """通知類型"""
   type: String
+
+  """uid"""
+  uid: String
+}
+
+"""通知紀錄"""
+type NotifLog implements Basic {
+  """實際通知時間"""
+  actual_notif_time: DateTime
+
+  """Create Date Time"""
+  createdAt: DateTime
+
+  """cron時間字串"""
+  cronTimeString: String
+
+  """Delete Date Time"""
+  deleteAt: DateTime
+
+  """id"""
+  id: Float
+
+  """訊息"""
+  message: String
+
+  """所屬事件"""
+  notification: Notification
+
+  """Update Date Time"""
+  updatedAt: DateTime
+}
+
+"""通知紀錄Input"""
+input NotifLogInput {
+  """實際通知時間"""
+  actual_notif_time: DateTime
+
+  """cron時間字串"""
+  cronTimeString: String
+
+  """訊息"""
+  message: String
+
+  """通知"""
+  notification: NotificationInput
 }
 
 type Query {
@@ -201,16 +279,34 @@ type Query {
   banks: [Bank]
 
   """依ID取得事件"""
-  event(id: Float, userId: Float): Event
+  event(id: Float): Event
+
+  """依當前使用者 & ID取得事件"""
+  eventByUserAndId(id: Float): Event
 
   """依條件取得所有事件"""
   events(userId: Float): [Event]
+
+  """依當前使用者取得事件"""
+  eventsByUser: [Event]
+
+  """依ID取得"""
+  log(id: Float): Log
+
+  """依UUID取得"""
+  logsByUUID(uuid: String): [Log]
 
   """依ID取得通知"""
   notification(id: Float): Notification
 
   """依條件取得通知"""
   notifications(eventId: Float, userId: Float): [Notification]
+
+  """依ID取得通知"""
+  notifLog(id: Float): NotifLog
+
+  """依條件取得通知紀錄"""
+  notifLogs(eventId: Float, notificationId: Float, userId: Float): [NotifLog]
 
   """依ID取得使用者"""
   user(id: Float): User
@@ -224,11 +320,17 @@ type Query {
 
 """使用者"""
 type User implements Basic {
+  """是否啟用"""
+  active: String
+
   """Create Date Time"""
   createdAt: DateTime
 
   """Delete Date Time"""
   deleteAt: DateTime
+
+  """顯示名稱"""
+  displayName: String
 
   """Email"""
   email: String
@@ -236,11 +338,20 @@ type User implements Basic {
   """事件"""
   events: [Event]
 
+  """firebaseUid"""
+  firebaseUid: String
+
   """id"""
   id: Float
 
-  """Line使用者ID"""
+  """lineUserId"""
   lineUserId: String
+
+  """顯示頭像"""
+  photoURL: String
+
+  """角色"""
+  role: String
 
   """Update Date Time"""
   updatedAt: DateTime
@@ -248,6 +359,24 @@ type User implements Basic {
 
 """使用者Input"""
 input UserInput {
+  """是否啟用"""
+  active: String
+
+  """顯示名稱"""
+  displayName: String
+
+  """Email"""
+  email: String
+
+  """firebaseUid"""
+  firebaseUid: String
+
   """id"""
   id: Float
+
+  """lineUserId"""
+  lineUserId: String
+
+  """顯示頭像"""
+  photoURL: String
 }

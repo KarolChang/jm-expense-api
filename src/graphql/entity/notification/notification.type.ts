@@ -1,12 +1,17 @@
-import { Entity, Column, ManyToOne } from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
-import { Basic } from '@graphql/Basic'
+import { Basic } from '@entity/Basic'
 import { NotifTypeEnum, NotifRepeatTypeEnum } from '@graphql/enum'
 import { Event } from '@entity/event'
+import { NotifLog } from '@entity/notifLog'
 
 @Entity()
 @ObjectType({ description: '通知', implements: Basic })
 export class Notification extends Basic {
+  @Column({ unique: true })
+  @Field({ description: 'uid' })
+  uid: string
+
   @Column({ type: 'enum', enum: NotifTypeEnum })
   @Field({ description: '通知類型' })
   type: NotifTypeEnum
@@ -39,15 +44,26 @@ export class Notification extends Basic {
   @Field({ description: '文字顏色' })
   textColor: string
 
+  @Column()
+  @Field({ description: 'cron時間字串' })
+  cronTimeString: string
+
   @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete' })
   @Field((type) => Event, { description: '事件' })
   event: Event
+
+  @OneToMany((type) => NotifLog, (log) => log.notification)
+  @Field((type) => [NotifLog], { description: '通知紀錄' })
+  notifLogs: NotifLog[]
 }
 
-@InputType({ description: '事件Input' })
+@InputType({ description: '通知Input' })
 export class NotificationInput implements Partial<Notification> {
   @Field({ description: 'id' })
   id: number
+
+  @Field({ description: 'uid' })
+  uid: string
 
   @Field({ description: '通知類型' })
   type: NotifTypeEnum
