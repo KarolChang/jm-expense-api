@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from 'routing-controllers'
+import { Body, JsonController, Post } from 'routing-controllers'
 import { WebhookRequestBody, WebhookEvent } from '@line/bot-sdk'
 import { LINE } from '@/utils/LINE'
 
-@Controller()
+@JsonController()
 export class WebhookController {
   @Post('/webhook')
   async lineWebhook(@Body() body: WebhookRequestBody) {
