@@ -33,3 +33,15 @@ registerEnumType(UserRoleEnum, {
   name: 'UserRoleEnum',
   description: '使用者角色 enum'
 })
+
+export enum LineActionEnum {
+  replyMessage = 'replyMessage',
+  pushMessage = 'pushMessage',
+  multicast = 'multicast',
+  broadcast = 'broadcast'
+}
+
+registerEnumType(LineActionEnum, {
+  name: 'LineActionEnum',
+  description: 'Line發送訊息方法 enum'
+})

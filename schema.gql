@@ -3,6 +3,18 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""每月資料"""
+type AmountByMonth {
+  """已結算金額"""
+  closedAmount: Float
+
+  """總金額"""
+  totalAmount: Float
+
+  """年/月"""
+  year_month: String
+}
+
 """銀行機構"""
 type Bank implements Basic {
   """代碼"""
@@ -98,6 +110,26 @@ input EventInput {
   user: UserInput
 }
 
+"""LineLog"""
+type LineLog {
+  """Line發送訊息方法"""
+  action: String
+  createdAt: DateTime
+
+  """錯誤訊息"""
+  errorMsg: String
+  id: Float
+
+  """發送訊息"""
+  messageJsonString: String
+
+  """發送對象"""
+  toJsonString: String
+
+  """uuid"""
+  uuid: String
+}
+
 """Log"""
 type Log {
   createdAt: DateTime
@@ -126,6 +158,9 @@ type Mutation {
   """刪除通知紀錄"""
   removeNotifLog(id: Float): NotifLog
 
+  """刪除"""
+  removeRecord(id: Float): Record
+
   """刪除使用者"""
   removeUser(id: Float): User
 
@@ -137,6 +172,9 @@ type Mutation {
 
   """儲存通知紀錄"""
   saveNotifLog(notifLog: NotifLogInput): NotifLog
+
+  """儲存"""
+  saveRecord(record: RecordInput): Record
 
   """儲存使用者"""
   saveUser(user: UserInput): User
@@ -291,10 +329,10 @@ type Query {
   eventsByUser: [Event]
 
   """依ID取得"""
-  log(id: Float): Log
+  log(id: Float): LineLog
 
   """依UUID取得"""
-  logsByUUID(uuid: String): [Log]
+  logsByUUID(uuid: String): [LineLog]
 
   """依ID取得通知"""
   notification(id: Float): Notification
@@ -308,6 +346,15 @@ type Query {
   """依條件取得通知紀錄"""
   notifLogs(eventId: Float, notificationId: Float, userId: Float): [NotifLog]
 
+  """依ID取得"""
+  record(id: Float): Record
+
+  """依條件取得"""
+  records: [Record]
+
+  """計算月總額"""
+  recordsAmountByMonth(year_month: String): AmountByMonth
+
   """依ID取得使用者"""
   user(id: Float): User
 
@@ -316,6 +363,60 @@ type Query {
 
   """取得所有使用者"""
   users: [User]
+}
+
+"""紀錄"""
+type Record implements Basic {
+  """金額"""
+  amount: Float
+
+  """Create Date Time"""
+  createdAt: DateTime
+
+  """日期"""
+  date: DateTime
+
+  """Delete Date Time"""
+  deleteAt: DateTime
+
+  """id"""
+  id: Float
+
+  """是否已結算"""
+  isClosed: Boolean
+
+  """項目"""
+  item: String
+
+  """商家"""
+  merchant: String
+
+  """Update Date Time"""
+  updatedAt: DateTime
+
+  """紀錄創建者"""
+  user: User
+}
+
+"""紀錄Input"""
+input RecordInput {
+  """金額"""
+  amount: Float
+
+  """日期"""
+  date: DateTime
+
+  """id"""
+  id: Float
+
+  """項目"""
+  item: String
+
+  """商家"""
+  merchant: String
+
+  """紀錄創建者"""
+  user: UserInput
 }
 
 """使用者"""

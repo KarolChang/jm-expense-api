@@ -6,9 +6,10 @@ import { GraphQLRequestContext } from 'apollo-server-types'
 import { buildSchema, NonEmptyArray } from 'type-graphql'
 import { customAuthChecker } from '@graphql/auth/checker'
 import { CustomContext } from '@graphql/auth/customContext'
+import { nanoid } from 'nanoid'
+import { useExpressServer } from 'routing-controllers'
 import path from 'path'
 import dotenv from 'dotenv'
-import { nanoid } from 'nanoid'
 dotenv.config()
 
 async function main() {
@@ -19,6 +20,13 @@ async function main() {
   await createConnection()
 
   console.log('======= db success connection ========')
+
+  useExpressServer(app, {
+    controllers:
+      process.env.NODE_ENV === 'production'
+        ? [path.resolve('./src/routings/*.{js, ts}')]
+        : [path.resolve('./src/routings/*.ts')]
+  })
 
   const schema = await buildSchema({
     resolvers:
