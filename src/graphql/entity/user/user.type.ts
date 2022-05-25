@@ -7,7 +7,7 @@ import { UserRoleEnum } from '@graphql/enum'
 @Entity()
 @ObjectType({ description: '使用者', implements: Basic })
 export class User extends Basic {
-  @Column()
+  @Column({ unique: true })
   @Field({ description: 'Email' })
   email: string
 
@@ -15,7 +15,7 @@ export class User extends Basic {
   @Field({ description: '顯示名稱' })
   displayName: string
 
-  @Column()
+  @Column({ nullable: true })
   @Field({ description: '顯示頭像' })
   photoURL: string
 
@@ -23,13 +23,13 @@ export class User extends Basic {
   @Field({ description: 'firebaseUid' })
   firebaseUid: string
 
-  @Column()
+  @Column({ nullable: true })
   @Field({ description: 'lineUserId' })
   lineUserId: string
 
   @Column()
   @Field({ description: '是否啟用' })
-  active: string
+  active: boolean
 
   @Column({ type: 'enum', enum: UserRoleEnum })
   @Field({ description: '角色' })
@@ -66,5 +66,5 @@ export class UserInput implements Partial<User> {
 
   @Column()
   @Field({ description: '是否啟用' })
-  active: string
+  active: boolean
 }

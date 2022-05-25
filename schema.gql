@@ -422,7 +422,7 @@ input RecordInput {
 """使用者"""
 type User implements Basic {
   """是否啟用"""
-  active: String
+  active: Boolean
 
   """Create Date Time"""
   createdAt: DateTime
@@ -461,7 +461,7 @@ type User implements Basic {
 """使用者Input"""
 input UserInput {
   """是否啟用"""
-  active: String
+  active: Boolean
 
   """顯示名稱"""
   displayName: String

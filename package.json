@@ -12,7 +12,7 @@
     "migrate_gen": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
     "migrate_run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
     "migrate_revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert",
-    "migrate_gen:prod": "tsc && TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
+    "migrate_gen:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration && tsc",
     "migrate_run:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
     "migrate_revert:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert"
   },
@@ -31,6 +31,7 @@
     "express": "^4.18.1",
     "firebase-admin": "^10.2.0",
     "graphql": "^15.3.0",
+    "js-base64": "^3.7.2",
     "module-alias": "^2.2.2",
     "mysql2": "^2.3.3",
     "nanoid": "^3.3.4",

@@ -1,6 +1,8 @@
 import { Body, JsonController, Post } from 'routing-controllers'
-import { WebhookRequestBody, WebhookEvent } from '@line/bot-sdk'
-import { LINE } from '@/utils/LINE'
+import { WebhookRequestBody, WebhookEvent, Message } from '@line/bot-sdk'
+import { LINE } from '@/line/LINE'
+import { Container } from 'typedi'
+import LineInfo from '@/line/LineInfo'
 
 @JsonController()
 export class WebhookController {
@@ -8,16 +10,15 @@ export class WebhookController {
   async lineWebhook(@Body() body: WebhookRequestBody) {
     console.log('body!!!', body)
     const events: WebhookEvent[] = body.events
-
     const results = await Promise.all(
-      events.map((event: WebhookEvent) => {
-        if (event.type === 'message' && event.message.type === 'text') {
-          console.log('這是message')
-          LINE.replyMessage(event.replyToken, { type: 'text', text: `哈哈哈 ${event.message.text}` })
-        }
+      events.map(async (event: WebhookEvent) => {
+        let message
+        message = Container.get('Line' + event.type[0].toUpperCase() + event.type.slice(1)) as LineInfo
+        message.line = LINE
+        message.event = event
+        message.push()
       })
     )
-
     return { status: 'success', results }
   }
 }
