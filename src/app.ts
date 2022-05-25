@@ -24,7 +24,7 @@ async function main() {
   useExpressServer(app, {
     controllers:
       process.env.NODE_ENV === 'production'
-        ? [path.resolve('./src/routings/*.{js, ts}')]
+        ? [path.resolve('./dist/routings/*.{js, ts}')]
         : [path.resolve('./src/routings/*.ts')]
   })
 
