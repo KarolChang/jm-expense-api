@@ -161,7 +161,7 @@ type Mutation {
   """刪除"""
   removeRecord(id: Float): Record
 
-  """刪除使用者"""
+  """刪除"""
   removeUser(id: Float): User
 
   """儲存事件"""
@@ -176,7 +176,7 @@ type Mutation {
   """儲存"""
   saveRecord(record: RecordInput): Record
 
-  """儲存使用者"""
+  """儲存"""
   saveUser(user: UserInput): User
 }
 
@@ -334,6 +334,9 @@ type Query {
   """依UUID取得"""
   logsByUUID(uuid: String): [LineLog]
 
+  """取得現在使用者"""
+  me: User
+
   """依ID取得通知"""
   notification(id: Float): Notification
 
@@ -355,13 +358,13 @@ type Query {
   """計算月總額"""
   recordsAmountByMonth(year_month: String): AmountByMonth
 
-  """依ID取得使用者"""
+  """依ID取得"""
   user(id: Float): User
 
-  """依Email取得使用者"""
+  """依Email取得"""
   userByEmail(email: String): User
 
-  """取得所有使用者"""
+  """依條件取得"""
   users: [User]
 }
 
@@ -478,6 +481,12 @@ input UserInput {
   """lineUserId"""
   lineUserId: String
 
+  """密碼"""
+  password: String
+
   """顯示頭像"""
   photoURL: String
+
+  """角色"""
+  role: String
 }

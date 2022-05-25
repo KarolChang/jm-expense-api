@@ -35,6 +35,8 @@ export class User extends Basic {
   @Field({ description: '角色' })
   role: UserRoleEnum
 
+  password: string
+
   @OneToMany((type) => Event, (event) => event.user)
   @Field((type) => [Event], { description: '事件' })
   events: Event[]
@@ -48,23 +50,24 @@ export class UserInput implements Partial<User> {
   @Field({ description: 'Email' })
   email: string
 
-  @Column()
   @Field({ description: '顯示名稱' })
   displayName: string
 
-  @Column()
   @Field({ description: '顯示頭像' })
   photoURL: string
 
-  @Column()
   @Field({ description: 'firebaseUid' })
   firebaseUid: string
 
-  @Column()
   @Field({ description: 'lineUserId' })
   lineUserId: string
 
-  @Column()
   @Field({ description: '是否啟用' })
   active: boolean
+
+  @Field({ description: '角色' })
+  role: UserRoleEnum
+
+  @Field({ description: '密碼' })
+  password: string
 }

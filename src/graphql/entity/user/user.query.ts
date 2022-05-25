@@ -1,23 +1,30 @@
-import { getRepository } from 'typeorm'
-import { Resolver, Query, Arg } from 'type-graphql'
-import { User } from '@entity/user'
+import { Resolver, Query, Arg, Authorized } from 'type-graphql'
+import { User, UserRepository, Repo } from '@entity/user'
 
 @Resolver((of) => User)
 export class UserQuery {
-  repo = getRepository(User)
-
-  @Query((returns) => [User], { description: '取得所有使用者' })
-  async users(): Promise<User[]> {
-    return this.repo.createQueryBuilder().getMany()
+  @Authorized()
+  @Query((returns) => User, { description: '取得現在使用者' })
+  async me(@Repo() repo: UserRepository): Promise<User | undefined> {
+    return repo.findOneOrFail(repo.ctx.user!.id)
   }
 
-  @Query((returns) => User, { description: '依Email取得使用者' })
-  async userByEmail(@Arg('email') email: string): Promise<User | undefined> {
-    return this.repo.findOneOrFail({ where: { email } })
+  @Authorized('admin')
+  @Query((returns) => [User], { description: '依條件取得' })
+  async users(@Repo() repo: UserRepository): Promise<User[]> {
+    const query = repo.queryBuilder()
+    return query.getMany()
   }
 
-  @Query((returns) => User, { description: '依ID取得使用者' })
-  async user(@Arg('id') id: number): Promise<User | undefined> {
-    return this.repo.findOneOrFail(id)
+  @Authorized('admin')
+  @Query((returns) => User, { description: '依ID取得' })
+  async user(@Repo() repo: UserRepository, @Arg('id') id: number): Promise<User | undefined> {
+    return repo.findOneOrFail(id)
+  }
+
+  @Authorized('admin')
+  @Query((returns) => User, { description: '依Email取得' })
+  async userByEmail(@Repo() repo: UserRepository, @Arg('email') email: string): Promise<User | undefined> {
+    return repo.findOneOrFail({ where: { email } })
   }
 }
