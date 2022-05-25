@@ -9,6 +9,9 @@
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
     "seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
     "seed:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed",
+    "migrate_gen": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
+    "migrate_run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
+    "migrate_revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert",
     "migrate_gen:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli -f ./ormconfig.js migration:generate -n migration",
     "migrate_run:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli -f ./ormconfig.js migration:run",
     "migrate_revert:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli -f ./ormconfig.js migration:revert"

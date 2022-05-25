@@ -24,14 +24,14 @@ async function main() {
   useExpressServer(app, {
     controllers:
       process.env.NODE_ENV === 'production'
-        ? [path.resolve('./dist/routings/*.{js, ts}')]
+        ? [path.resolve('./dist/routings/*.js')]
         : [path.resolve('./src/routings/*.ts')]
   })
 
   const schema = await buildSchema({
     resolvers:
       process.env.NODE_ENV === 'production'
-        ? ([path.resolve('./dist/graphql/entity/**/index.{js, ts}')] as NonEmptyArray<string>)
+        ? ([path.resolve('./dist/graphql/entity/**/index.js')] as NonEmptyArray<string>)
         : ([path.resolve('./src/graphql/entity/**/index.ts')] as NonEmptyArray<string>),
     // ([path.resolve('./dist/graphql/entity/**/index{.js,.ts}')] as NonEmptyArray<string>)
     dateScalarMode: 'isoDate', // 預設是 'isoDate'

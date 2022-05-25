@@ -1,0 +1,141 @@
+{
+  "Index": {
+    "prefix": "gen index",
+    "body": [
+      "export * from './${1:ClassName}.type'",
+      "export * from './$1.repo'",
+      "export * from './$1.query'",
+      "export * from './$1.mutation'",
+      "export * from './$1.fieldResolver'",
+      ""
+    ]
+  },
+  "Type": {
+    "prefix": "gen type",
+    "body": [
+      "import { Entity, Column } from 'typeorm'",
+      "import { Field, ObjectType, InputType } from 'type-graphql'",
+      "import { Basic } from '@entity/Basic'",
+      "",
+      "@Entity()",
+      "@ObjectType({ description: '${1:${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}}', implements: Basic })",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/} extends Basic {",
+      "  @Column()",
+      "  @Field({ description: '名稱' })",
+      "  name: string",
+      "}",
+      "",
+      "@InputType({ description: '$1Input' })",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Input implements Partial<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}> {",
+      "  @Field({ description: 'id' })",
+      "  id: number",
+      "}",
+      ""
+    ]
+  },
+  "Repo": {
+    "prefix": "gen repo",
+    "body": [
+      "import { getCustomRepository, EntityRepository, Repository } from 'typeorm'",
+      "import { createParamDecorator } from 'type-graphql'",
+      "import { InjectData } from '@/decorators/InjectData'",
+      "import { CustomContext } from '@graphql/auth/customContext'",
+      "import { ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/} } from '@entity/${TM_FILENAME/^([^.]+)\\..+$/$1/}'",
+      "import { ApolloError } from 'apollo-server-errors'",
+      "",
+      "@InjectData()",
+      "@EntityRepository(${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/})",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository extends Repository<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}> {",
+      "  ctx: CustomContext",
+      "  log: boolean = true",
+      "",
+      "  queryBuilder() {",
+      "    return this.createQueryBuilder('${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}').orderBy('${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}.createdAt')",
+      "  }",
+      "}",
+      "",
+      "export const get${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repo = () => getCustomRepository(${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository)",
+      "",
+      "export const Repo = () => {",
+      "  return createParamDecorator(({ context }) => {",
+      "    const repo = get${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repo()",
+      "    repo.ctx = context as CustomContext",
+      "    return repo",
+      "  })",
+      "}",
+      ""
+    ]
+  },
+  "Query": {
+    "prefix": "gen query",
+    "body": [
+      "import { Resolver, Query, Arg, Authorized } from 'type-graphql'",
+      "import { ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}, ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository, Repo } from '@entity/${TM_FILENAME/^([^.]+)\\..+$/$1/}'",
+      "",
+      "@Resolver((of) => ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/})",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Query {",
+      "  @Authorized()",
+      "  @Query((returns) => [${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}], { description: '依條件取得' })",
+      "  async ${TM_FILENAME/^([^.]+)\\..+$/$1/}s(@Repo() repo: ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository): Promise<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}[]> {",
+      "    const query = repo.queryBuilder()",
+      "    return query.getMany()",
+      "  }",
+      "",
+      "  @Authorized()",
+      "  @Query((returns) => ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}, { description: '依ID取得' })",
+      "  async ${TM_FILENAME/^([^.]+)\\..+$/$1/}(@Repo() repo: ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository, @Arg('id') id: number): Promise<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/} | undefined> {",
+      "    return repo.findOneOrFail(id)",
+      "  }",
+      "}"
+    ]
+  },
+  "Mutation": {
+    "prefix": "gen mutation",
+    "body": [
+      "import { Resolver, Mutation, Arg, Authorized } from 'type-graphql'",
+      "import { ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}, ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Input, ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository, Repo } from '@entity/${TM_FILENAME/^([^.]+)\\..+$/$1/}'",
+      "",
+      "@Resolver((of) => ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/})",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Mutation {",
+      "  @Authorized()",
+      "  @Mutation((returns) => ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}, { description: '儲存' })",
+      "  async save${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}(@Repo() repo: ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository, @Arg('${TM_FILENAME/^([^.]+)\\..+$/$1/}') input: ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Input) {",
+      "    let ${TM_FILENAME/^([^.]+)\\..+$/$1/} = repo.create(input)",
+      "    return await repo.save(${TM_FILENAME/^([^.]+)\\..+$/$1/})",
+      "  }",
+      "",
+      "  @Authorized()",
+      "  @Mutation((returns) => ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}, { description: '刪除' })",
+      "  async remove${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}(@Repo() repo: ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository, @Arg('id') id: number) {",
+      "    const ${TM_FILENAME/^([^.]+)\\..+$/$1/} = await repo.findOneOrFail(id)",
+      "    return repo.softRemove(${TM_FILENAME/^([^.]+)\\..+$/$1/})",
+      "  }",
+      "}"
+    ]
+  },
+  "Listener": {
+    "prefix": "gen listener",
+    "body": [
+      "import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm'",
+      "import { ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/} } from '@entity/${TM_FILENAME/^([^.]+)\\..+$/$1/}'",
+      "import { ApolloError } from 'apollo-server-errors'",
+      "",
+      "@EventSubscriber()",
+      "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}EventSubscriber implements EntitySubscriberInterface<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}> {",
+      "  listenTo() {",
+      "    return ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}",
+      "  }",
+      "",
+      "  beforeInsert(event: InsertEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  beforeUpdate(event: UpdateEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  beforeSoftRemove(event: RemoveEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  beforeRemove(event: RemoveEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+
+      "  afterInsert(event: InsertEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  afterUpdate(event: UpdateEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  afterSoftRemove(event: RemoveEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "  afterRemove(event: RemoveEvent<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}>) {}",
+      "}"
+    ]
+  }
+}
