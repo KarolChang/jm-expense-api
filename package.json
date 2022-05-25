@@ -12,7 +12,7 @@
     "migrate_gen": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
     "migrate_run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
     "migrate_revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert",
-    "migrate_gen:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
+    "migrate_gen:prod": "tsc && TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
     "migrate_run:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
     "migrate_revert:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert"
   },
