@@ -149,6 +149,9 @@ type Log {
 }
 
 type Mutation {
+  """line綁定"""
+  bindUser(email: String, lineUserId: String): User
+
   """結算"""
   closeRecord(records: [RecordInput]): Record
 
