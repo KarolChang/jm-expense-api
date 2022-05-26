@@ -1,10 +1,8 @@
 import { Service } from 'typedi'
-import LineInfo from '@/line/LineInfo'
+import LineInfo from '@/graphql/entity/line/LineInfo'
 import { AccountLinkEvent } from '@line/bot-sdk'
 import { Base64 } from 'js-base64'
-import { getRepository } from 'typeorm'
-import { User } from '@entity/user'
-import { linkedTemplate } from '@/line/lineTemplate'
+import { linkedTemplate } from '@/graphql/entity/line/lineTemplate'
 import { ApolloError } from 'apollo-server-errors'
 import { getUserRepo } from '@entity/user'
 

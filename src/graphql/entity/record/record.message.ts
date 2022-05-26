@@ -1,8 +1,8 @@
 import { Service } from 'typedi'
-import { LineMessage } from '@entity/LineMessage'
+import { LineMsg } from '@entity/LineMsg'
 import { Record } from '@entity/record'
 import { LineLog } from '@entity/lineLog'
-import { LINE } from '@/line/LINE'
+import { LINE } from '@/graphql/entity/line/LINE'
 import { ApolloError } from 'apollo-server-errors'
 import { RecordMutation } from './record.mutation'
 import { nanoid } from 'nanoid'
@@ -10,7 +10,7 @@ import { LineActionEnum } from '@graphql/enum'
 import { Message } from '@line/bot-sdk'
 
 @Service('Record_LineMsg')
-export class RecordLineMsg extends LineMessage<Record> {
+export class RecordLineMsg extends LineMsg<Record> {
   async push() {
     const res = await this.lineMsg()
     await this.lineLog(res)

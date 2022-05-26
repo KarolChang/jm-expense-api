@@ -18,10 +18,18 @@ export class UserRepository extends Repository<User> {
   async bindLineUserId(email: string, lineUserId: string) {
     const user = this.findOne({ where: { email, active: true } })
     if (!user) {
-      throw new ApolloError('Bind LineUserId Error', 'email_error')
+      throw new ApolloError('Bind LineUserId Error', 'user_not_found[email]')
     }
     await this.save({ ...user, lineUserId })
     // return await this.update({ email }, { lineUserId })
+  }
+
+  async unlinkLineUserId(lineUserId: string) {
+    const user = this.findOne({ where: { lineUserId, active: true } })
+    if (!user) {
+      throw new ApolloError('Unlink LineUserId Error', 'user_not_found[lineUserId]')
+    }
+    await this.save({ ...user, lineUserId: '' })
   }
 }
 

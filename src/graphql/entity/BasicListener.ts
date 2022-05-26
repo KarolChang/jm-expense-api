@@ -1,7 +1,7 @@
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm'
 import { Log } from '@entity/log'
 import { Container } from 'typedi'
-import { LineMessage } from './LineMessage'
+import { LineMsg } from '@entity/LineMsg'
 
 type AllEvent<T> = UpdateEvent<T> | InsertEvent<T> | RemoveEvent<T>
 
@@ -59,7 +59,7 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     const serviceName = `${event.entity.constructor.name}_LineMsg`
     let message
     try {
-      message = Container.get(serviceName) as LineMessage<any>
+      message = Container.get(serviceName) as LineMsg<any>
     } catch (error) {
       // 找不到對應的 serviceName 時，進到這裡
     }

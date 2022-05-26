@@ -1,10 +1,11 @@
 import { Service } from 'typedi'
-import LineInfo from '@/line/LineInfo'
+import LineInfo from '@/graphql/entity/line/LineInfo'
 import { MessageEvent, EventMessage, Message } from '@line/bot-sdk'
-import { linkTemplate, unlinkedTemplate } from '@/line/lineTemplate'
+import { linkTemplate, unlinkedTemplate } from '@/graphql/entity/line/lineTemplate'
 import { getRepository } from 'typeorm'
 import { User } from '@entity/user'
 import { ApolloError } from 'apollo-server-errors'
+import { getUserRepo } from '@entity/user'
 
 @Service('LineMessage')
 export class LineMessage extends LineInfo {
@@ -22,9 +23,13 @@ export class LineMessage extends LineInfo {
           break
         case '取消連動':
           const lineUserId = event.source.userId
-          await this.unlink(lineUserId!)
-          echo = unlinkedTemplate()
-          break
+          if (lineUserId) {
+            await getUserRepo().unlinkLineUserId(lineUserId)
+            echo = unlinkedTemplate()
+            break
+          } else {
+            throw new ApolloError('Line Unlink Error', 'lineUserId_error')
+          }
         default:
           echo = { type: 'text', text: '阿巴阿巴' }
       }
