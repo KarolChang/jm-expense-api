@@ -9,6 +9,12 @@ export const customAuthChecker: AuthChecker<CustomContext> = async ({ root, args
   try {
     // 存 info 在 context 中
     context.info = info
+    // console.log('info!!!', info)
+
+    // 如果是 register 就不用驗證用戶
+    if (info.fieldName === 'saveUser' && !info.variableValues.id) {
+      return true
+    }
 
     // 驗證使用者
     // 1. 取得 token

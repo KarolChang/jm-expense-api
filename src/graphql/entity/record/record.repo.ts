@@ -2,8 +2,7 @@ import { getCustomRepository, EntityRepository, Repository } from 'typeorm'
 import { createParamDecorator } from 'type-graphql'
 import { InjectData } from '@/decorators/InjectData'
 import { CustomContext } from '@graphql/auth/customContext'
-import { Record } from '@entity/record'
-import { ApolloError } from 'apollo-server-errors'
+import { Record, RecordInput } from '@entity/record'
 import dayjs from 'dayjs'
 import { AmountByMonth } from './record.type'
 
@@ -36,7 +35,10 @@ export class RecordRepository extends Repository<Record> {
   }
 
   // 結算
-  // async close() {}
+  async close(records: RecordInput[]) {
+    const recordIds = records.map((e: RecordInput) => e.id)
+    return this.update(recordIds, { isClosed: true })
+  }
 }
 
 export const getRecordRepo = () => getCustomRepository(RecordRepository)

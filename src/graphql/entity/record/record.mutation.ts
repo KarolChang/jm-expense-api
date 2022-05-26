@@ -17,9 +17,9 @@ export class RecordMutation {
     return repo.softRemove(record)
   }
 
-  // @Authorized()
-  // @Mutation((returns) => Record, { description: '結算' })
-  // async closeRecord(@Repo() repo: RecordRepository, @Arg('record') input: RecordInput) {
-  //   return repo.close()
-  // }
+  @Authorized()
+  @Mutation((returns) => Record, { description: '結算' })
+  async closeRecord(@Repo() repo: RecordRepository, @Arg('records', (type) => [RecordInput]) records: RecordInput[]) {
+    return repo.close(records)
+  }
 }

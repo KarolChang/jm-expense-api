@@ -44,10 +44,11 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     // decorator: InjectData (先在repo方法中加入data資訊)
     const data = event.queryRunner.data
     const entity = event.entity
-    console.log('[addLog]', action, entity.constructor.name)
+    console.log('[addLog]', action, entity.constructor.name, data)
     if (data.ctx) {
       if (data.log) {
         const log = new Log(data.ctx, entity, action)
+
         const logRepo = event.manager.getRepository(Log)
         return await logRepo.save(log, { listeners: false })
       }

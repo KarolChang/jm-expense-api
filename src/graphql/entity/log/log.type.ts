@@ -8,8 +8,9 @@ export class Log {
   constructor(context: CustomContext, entity: any, action: 'INSERT' | 'UPDATE' | 'SOFT_REMOVE' | 'REMOVE') {
     if (context && entity && action) {
       this.uuid = context.uuid
-      this.userEmail = context.user!.email
-      this.userDisplayName = context.user!.displayName
+      // userEmail & userDisplayName => 在註冊時使用 entity 的資訊
+      this.userEmail = context.user ? context.user.email : entity.email
+      this.userDisplayName = context.user ? context.user.displayName : entity.displayName
       this.sqlAction = action
       this.entityId = entity.id
       this.entityName = entity.constructor.name

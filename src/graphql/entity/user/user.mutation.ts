@@ -3,7 +3,7 @@ import { User, UserInput, UserRepository, Repo } from '@entity/user'
 
 @Resolver((of) => User)
 export class UserMutation {
-  // @Authorized()
+  @Authorized()
   @Mutation((returns) => User, { description: '儲存' })
   async saveUser(@Repo() repo: UserRepository, @Arg('user') input: UserInput) {
     let user = repo.create(input)

@@ -149,6 +149,9 @@ type Log {
 }
 
 type Mutation {
+  """結算"""
+  closeRecord(records: [RecordInput]): Record
+
   """刪除事件"""
   removeEvent(id: Float): Event
 
