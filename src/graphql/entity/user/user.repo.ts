@@ -16,7 +16,9 @@ export class UserRepository extends Repository<User> {
   }
 
   async bindLineUserId(email: string, lineUserId: string) {
+    console.log('[bindLineUserId]params!!!', email, lineUserId)
     const user = this.findOne({ where: { email, active: true } })
+    console.log('[bindLineUserId]user!!!', user)
     if (!user) {
       throw new ApolloError('Bind LineUserId Error', 'user_not_found[email]')
     }

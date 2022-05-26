@@ -6,8 +6,15 @@ export class UserMutation {
   @Authorized()
   @Mutation((returns) => User, { description: '儲存' })
   async saveUser(@Repo() repo: UserRepository, @Arg('user') input: UserInput) {
+    console.log('[M]user', input)
     let user = repo.create(input)
-    return await repo.save(user)
+    // 有 password 代表是註冊
+    if (input.password) {
+      console.log('[M]input.password', input.password)
+      return await repo.save(user, { data: { password: input.password } })
+    } else {
+      return await repo.save(user)
+    }
   }
 
   @Authorized()

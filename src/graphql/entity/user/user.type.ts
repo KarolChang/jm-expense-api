@@ -35,8 +35,6 @@ export class User extends Basic {
   @Field({ description: '角色' })
   role: UserRoleEnum
 
-  password: string
-
   @OneToMany((type) => Event, (event) => event.user)
   @Field((type) => [Event], { description: '事件' })
   events: Event[]

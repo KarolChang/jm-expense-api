@@ -13,9 +13,7 @@ export class WebhookController {
     const results = await Promise.all(
       events.map(async (event: WebhookEvent) => {
         let message
-        console.log('Container!!!')
         message = Container.get('Line' + event.type[0].toUpperCase() + event.type.slice(1)) as LineInfo
-        console.log('message', message)
         message.line = LINE
         message.event = event
         message.push()
