@@ -12,6 +12,7 @@ export class UserEventSubscriber implements EntitySubscriberInterface<User> {
   async beforeInsert(event: InsertEvent<User>) {
     const user = event.entity
     const password = event.queryRunner.data.password
+    console.log('event.queryRunner.data!!!', event.queryRunner.data)
     // 在 firebase 創建用戶
     const firebaseUser = await adminApp.auth().createUser({
       email: user.email,
