@@ -23,4 +23,18 @@ export class UserMutation {
     const user = await repo.findOneOrFail(id)
     return repo.softRemove(user)
   }
+
+  @Authorized()
+  @Mutation((returns) => User, { description: 'line綁定' })
+  async bindUser(@Repo() repo: UserRepository, @Arg('email') email: string, @Arg('lineUserId') lineUserId: string) {
+    console.log('[M]bindUser', repo, email, lineUserId)
+    await repo.bindLineUserId(email, lineUserId)
+  }
+
+  // @Authorized()
+  // @Mutation((returns) => User, { description: 'line解除綁定' })
+  // async removeUser(@Repo() repo: UserRepository, @Arg('id') id: number) {
+  //   const user = await repo.findOneOrFail(id)
+  //   return repo.softRemove(user)
+  // }
 }

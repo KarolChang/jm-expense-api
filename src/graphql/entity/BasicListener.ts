@@ -48,7 +48,6 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     if (data.ctx) {
       if (data.log) {
         const log = new Log(data.ctx, entity, action)
-
         const logRepo = event.manager.getRepository(Log)
         return await logRepo.save(log, { listeners: false })
       }

@@ -17,13 +17,14 @@ export class UserRepository extends Repository<User> {
 
   async bindLineUserId(email: string, lineUserId: string) {
     const user = await this.findOne({ where: { email, active: true } })
-    console.log('[bindLineUserId]user!!!', user)
     if (!user) {
       throw new ApolloError('Bind LineUserId Error', 'user_not_found[email]')
     }
     await this.save({ ...user, lineUserId })
     // return await this.update({ email }, { lineUserId })
   }
+
+  // 寫到 mutation 去
 
   async unlinkLineUserId(lineUserId: string) {
     const user = this.findOne({ where: { lineUserId, active: true } })

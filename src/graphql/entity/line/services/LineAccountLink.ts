@@ -5,6 +5,7 @@ import { Base64 } from 'js-base64'
 import { linkedTemplate } from '@/graphql/entity/line/lineTemplate'
 import { ApolloError } from 'apollo-server-errors'
 import { getUserRepo } from '@entity/user'
+import { UserMutation, UserRepository } from '@entity/user'
 
 @Service('LineAccountLink')
 export class LineAccountLink extends LineInfo {
@@ -15,7 +16,10 @@ export class LineAccountLink extends LineInfo {
       const email = Base64.decode(event.link.nonce)
       const lineUserId = event.source.userId!
       // 儲存使用者的 lineUserId
-      await getUserRepo().bindLineUserId(email, lineUserId)
+      const USER_MUTATION = new UserMutation()
+      await USER_MUTATION.bindUser(new UserRepository(), email, lineUserId)
+      // await getUserRepo().bindLineUserId(email, lineUserId)
+
       // 傳送訊息
       const echo = linkedTemplate()
       LINE.replyMessage(event.replyToken, echo)
