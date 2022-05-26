@@ -8,7 +8,7 @@ module.exports = {
   subscribers: ['dist/graphql/entity/BasicListener.js', 'dist/graphql/entity/**/*.listener.js'],
   migrations: ['dist/graphql/migrations/*.js'],
   cli: {
-    // migrationsDir: 'src/graphql/migrations',
+    migrationsDir: 'src/graphql/migrations'
     // entitiesDir: '',
     // subscribersDir: ''
   }

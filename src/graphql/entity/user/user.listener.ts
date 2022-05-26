@@ -22,6 +22,7 @@ export class UserEventSubscriber implements EntitySubscriberInterface<User> {
     })
     console.log('firebaseUser!!!', firebaseUser)
     user.firebaseUid = firebaseUser.uid
+    user.active = true
   }
 
   // beforeUpdate(event: UpdateEvent<User>) {}
