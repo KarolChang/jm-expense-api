@@ -10,8 +10,8 @@ export class NotificationQuery {
   async notifications(@Arg('eventId') eventId?: number, @Arg('userId') userId?: number): Promise<Notification[]> {
     const query = this.repo
       .createQueryBuilder('Notification')
-      .leftJoin('Notification.event', 'event')
-      .leftJoin('event.user', 'user')
+      .leftJoinAndSelect('Notification.event', 'event')
+      .leftJoinAndSelect('event.user', 'user')
     if (eventId) {
       query.andWhere('event.id = :eventId', { eventId })
     }

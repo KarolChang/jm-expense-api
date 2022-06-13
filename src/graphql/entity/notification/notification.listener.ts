@@ -1,15 +1,19 @@
-import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent } from 'typeorm'
+import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, getRepository } from 'typeorm'
 import { Notification } from '@entity/notification'
 import { NotifLog } from '@entity/notifLog'
 import { nanoid } from 'nanoid'
-import cron, { getTasks, ScheduledTask } from 'node-cron'
+import schedule from 'node-schedule'
+import { CustomJob } from '@graphql/CustomJob'
 import { ApolloError } from 'apollo-server-errors'
-import { lineBotPushMsg } from '@/utils/lineBotMsg'
+import { lineBotPushTextMsg } from '@/utils/lineBotMsg'
+import { NotifRepeatTypeEnum } from '@graphql/enum'
 // import dayjs from 'dayjs'
 // import numeral from 'numeral'
 
 @EventSubscriber()
 export class NotifEventSubscriber implements EntitySubscriberInterface<Notification> {
+  private oldUid?: string = undefined
+
   listenTo() {
     return Notification
   }
@@ -17,13 +21,14 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
   beforeInsert(event: InsertEvent<Notification>) {
     const notif = event.entity
     notif.uid = nanoid()
-    notif.cronTimeString = this.validateCron(notif.notif_time)
+    notif.cronTimeString = this.formatCron(notif.notif_time, notif.repeatType)
   }
 
   beforeUpdate(event: UpdateEvent<Notification>) {
     const notif = event.entity!
+    this.oldUid = notif.uid
     notif.uid = nanoid()
-    notif.cronTimeString = this.validateCron(notif.notif_time)
+    notif.cronTimeString = this.formatCron(notif.notif_time, notif.repeatType)
   }
 
   async afterInsert(event: InsertEvent<Notification>) {
@@ -31,39 +36,89 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
   }
 
   async afterUpdate(event: UpdateEvent<Notification>) {
-    await this.destroySchedule()
+    // 重設排程 -> 先刪掉排程
+    await this.destroySchedule(this.oldUid)
     this.setSchedule(event)
   }
 
   // functions
-  validateCron(time: Date) {
-    const cronTime = `${time.getMinutes()} ${time.getHours()} ${time.getDate()} * *`
-    if (!cron.validate(cronTime)) {
-      throw new ApolloError('Cron Error', 'cronTime_invalid')
+  formatCron(time: Date, type: string) {
+    let cronTime
+    switch (type) {
+      case NotifRepeatTypeEnum.never:
+        cronTime = new Date(
+          time.getFullYear(),
+          time.getMonth(),
+          time.getDate(),
+          time.getHours(),
+          time.getMinutes()
+        ).toString()
+      case NotifRepeatTypeEnum.every_day:
+        cronTime = `${time.getMinutes()} ${time.getHours()} * * *`
+      case NotifRepeatTypeEnum.every_week:
+        cronTime = `${time.getMinutes()} ${time.getHours()} * * ${time.getDay()}`
+      case NotifRepeatTypeEnum.every_month:
+        cronTime = `${time.getMinutes()} ${time.getHours()} ${time.getDate()} * *`
+      case NotifRepeatTypeEnum.every_year:
+        cronTime = `${time.getMinutes()} ${time.getHours()} ${time.getDate()} ${time.getMonth() + 1} *`
+    }
+    if (!cronTime) {
+      throw new ApolloError('FormatCron Fail', 'cron_undefined')
     }
     return cronTime
   }
 
-  setSchedule(event: InsertEvent<Notification> | UpdateEvent<Notification>) {
-    const notif = event.entity!
-    const task: ScheduledTask = cron.schedule(notif.cronTimeString, async () => {
+  async setSchedule(event: InsertEvent<Notification> | UpdateEvent<Notification>) {
+    const notifId = event.entity!.id
+    const repo = event.manager
+      .getRepository(Notification)
+      .createQueryBuilder('Notification')
+      .leftJoinAndSelect('Notification.event', 'event')
+      .leftJoinAndSelect('event.user', 'user')
+    const notif = await repo.where('Notification.id = :notifId', { notifId }).getOne()
+    console.log()
+    if (!notif) {
+      throw new ApolloError('Notification Does Not Exist', 'notification_id_not_found')
+    }
+    this.setJob(notif)
+  }
+
+  setJob(notif: Notification) {
+    let cronTimeString: string | Date = notif.cronTimeString
+    if (notif.repeatType === NotifRepeatTypeEnum.never) {
+      cronTimeString = new Date(cronTimeString)
+    }
+    const task: CustomJob = schedule.scheduleJob(cronTimeString, async () => {
       console.log('[', new Date().toLocaleString(), '] ', notif.message)
-      await lineBotPushMsg('Ub3557f7c812e4e78293959fe4fccd414', notif.message)
-      this.insertNotifLogData(event)
+      try {
+        await lineBotPushTextMsg(notif.event.user.lineUserId, notif.message)
+        this.insertNotifLogData(notif)
+      } catch (error) {
+        console.log('[ERROR-setJob] ', error)
+      }
     })
-    // task.uid = notif.uid
+    task.uid = notif.uid
   }
 
-  async destroySchedule() {
-    console.log('destroySchedule')
-    // 若之前設過排程，先刪掉排程
-    let tasks = getTasks()
+  async destroySchedule(oldUid?: string) {
+    // get all jobs and find the job which will be canceled
+    const jobs = schedule.scheduledJobs
+    // console.log('jobs', jobs)
+    for (const [key, value] of Object.entries(jobs)) {
+      const job = value as CustomJob
+      if (job.uid === oldUid) {
+        jobs[key].cancel()
+        break
+      }
+    }
+    // const newJobs = schedule.scheduledJobs
+    // console.log('newJobs', newJobs)
+    this.oldUid = undefined
   }
 
-  async insertNotifLogData(event: InsertEvent<Notification> | UpdateEvent<Notification>) {
-    const notif = event.entity!
-    const notification = await event.manager.getRepository(Notification).findOneOrFail({ where: { uid: notif.uid } })
-    const repo = event.manager.getRepository(NotifLog)
+  async insertNotifLogData(notif: Notification) {
+    const notification = await getRepository(Notification).findOneOrFail({ where: { uid: notif.uid } })
+    const repo = getRepository(NotifLog)
     let notifLog = repo.create({
       cronTimeString: notif.cronTimeString,
       message: notif.message,

@@ -1,16 +1,26 @@
-import lineBotAPI from '@/apis/lineBot'
+import { LINE } from '@graphql/line/LINE'
+import { LineLog } from '@entity/lineLog'
+import { nanoid } from 'nanoid'
+import { TextMessage } from '@line/bot-sdk'
+import { LineActionEnum } from '@graphql/enum'
+import { getRepository } from 'typeorm'
 
-export const lineBotPushMsg = async (userId: string, text: string) => {
+export const lineBotPushTextMsg = async (userId: string, text: string) => {
+  const lineLogRepo = getRepository(LineLog)
+  const message: TextMessage = {
+    type: 'text',
+    text
+  }
   try {
-    const input: any = {
-      to: userId,
-      messages: {
-        type: 'text',
-        text
-      }
-    }
-    await lineBotAPI.push(input)
+    // push msg
+    await LINE.pushMessage(userId, message)
+    // lineLog
+    const lineLog = new LineLog(nanoid(), userId, message, LineActionEnum.pushMessage)
+    await lineLogRepo.save(lineLog)
   } catch (error) {
-    console.error('[ERROR LineBot]', error)
+    console.log('[ERROR LineBot]', error)
+    // lineLog
+    const lineLog = new LineLog(nanoid(), userId, message, LineActionEnum.pushMessage, error)
+    await lineLogRepo.save(lineLog)
   }
 }

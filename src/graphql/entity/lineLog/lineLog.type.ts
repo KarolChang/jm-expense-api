@@ -1,23 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { LineActionEnum } from '@graphql/enum'
-import { Message } from '@line/bot-sdk'
+import { Message, HTTPError } from '@line/bot-sdk'
 
 @Entity()
 @ObjectType({ description: 'LineLog' })
 export class LineLog {
-  constructor(
-    uuid: string,
-    to: string | string[],
-    message: Message | Message[],
-    action: LineActionEnum,
-    errorMsg?: string
-  ) {
+  constructor(uuid: string, to: string | string[], message: Message | Message[], action: LineActionEnum, error?: any) {
     this.uuid = uuid
     this.to = to
     this.message = message
     this.action = action
-    this.errorMsg = errorMsg
+    this.error = error
   }
 
   @PrimaryGeneratedColumn()
@@ -48,9 +42,9 @@ export class LineLog {
   @Field({ description: 'Line發送訊息方法' })
   action: LineActionEnum
 
-  @Column({ nullable: true })
-  @Field({ description: '錯誤訊息' })
-  errorMsg?: string
+  @Column({ type: 'json', nullable: true })
+  // @Field({ description: '錯誤訊息' })
+  error: any
 }
 
 // @InputType({ description: 'LineLogInput' })

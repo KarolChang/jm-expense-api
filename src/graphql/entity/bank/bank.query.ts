@@ -6,6 +6,7 @@ import { Bank } from '@entity/bank'
 export class BankQuery {
   repo = getRepository(Bank)
 
+  @Authorized()
   @Query((returns) => [Bank], { description: '依條件取得所有銀行機構' })
   async banks(): Promise<Bank[]> {
     return this.repo.createQueryBuilder().getMany()
@@ -17,6 +18,7 @@ export class BankQuery {
     return this.repo.findOneOrFail(id)
   }
 
+  @Authorized()
   @Query((returns) => Bank, { description: '依代碼(code)取得銀行機構' })
   async bankByCode(@Arg('code') code: string): Promise<Bank | undefined> {
     return this.repo.findOneOrFail({ where: { code } })

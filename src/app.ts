@@ -6,6 +6,7 @@ import { GraphQLRequestContext } from 'apollo-server-types'
 import { buildSchema, NonEmptyArray } from 'type-graphql'
 import { customAuthChecker } from '@graphql/auth/checker'
 import { CustomContext } from '@graphql/auth/customContext'
+import { initSchedule } from '@graphql/schedule'
 import { nanoid } from 'nanoid'
 import { useExpressServer } from 'routing-controllers'
 import path from 'path'
@@ -19,7 +20,7 @@ async function main() {
 
   await createConnection()
 
-  console.log('======= db success connection ========')
+  console.log('Step1: DB Success Connection......')
 
   useExpressServer(app, {
     controllers:
@@ -68,8 +69,15 @@ async function main() {
   })
   await server.start()
   server.applyMiddleware({ app })
+
+  console.log('Step2: Graphql Success Initialize......')
+
+  await initSchedule()
+
+  console.log('Step3: Schedules Success Initialize......')
+
   app.listen(process.env.PORT || 4100, () => {
-    console.log(`Server has started at http://localhost:${process.env.PORT}/graphql`)
+    console.log(`Step4: Server has started at http://localhost:${process.env.PORT}/graphql`)
     // Launch Time
     const finishTime = new Date()
     const time = finishTime.getTime() - startTime.getTime()

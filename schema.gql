@@ -115,9 +115,6 @@ type LineLog {
   """Line發送訊息方法"""
   action: String
   createdAt: DateTime
-
-  """錯誤訊息"""
-  errorMsg: String
   id: Float
 
   """發送訊息"""
@@ -149,9 +146,6 @@ type Log {
 }
 
 type Mutation {
-  """line綁定"""
-  bindUser(email: String, lineUserId: String): User
-
   """結算"""
   closeRecord(records: [RecordInput]): Record
 
@@ -335,10 +329,10 @@ type Query {
   eventsByUser: [Event]
 
   """依ID取得"""
-  log(id: Float): LineLog
+  log(id: Float): Log
 
   """依UUID取得"""
-  logsByUUID(uuid: String): [LineLog]
+  logsByUUID(uuid: String): [Log]
 
   """取得現在使用者"""
   me: User

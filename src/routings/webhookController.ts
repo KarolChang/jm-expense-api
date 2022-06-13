@@ -1,8 +1,8 @@
 import { Body, JsonController, Post } from 'routing-controllers'
 import { WebhookRequestBody, WebhookEvent, Message } from '@line/bot-sdk'
-import { LINE } from '@/graphql/entity/line/LINE'
+import { LINE } from '@/graphql/line/LINE'
 import { Container } from 'typedi'
-import LineInfo from '@/graphql/entity/line/LineInfo'
+import LineInfo from '@/graphql/line/LineInfo'
 
 @JsonController()
 export class WebhookController {
