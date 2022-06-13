@@ -82,6 +82,7 @@ async function main() {
     const finishTime = new Date()
     const time = finishTime.getTime() - startTime.getTime()
     console.log(`[Launch Time] duration: ${time}ms`)
+    console.log(`[Now Time] ${new Date().toLocaleString()}`)
   })
 }
 main()

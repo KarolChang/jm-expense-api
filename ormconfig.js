@@ -3,7 +3,7 @@ module.exports = {
   url: process.env.JAWSDB_URL,
   synchronize: true,
   logging: false,
-  entities: ['dist/graphql/entity/**/*.js'],
+  entities: ['dist/graphql/entity/**/*.js', 'src/graphql/services/**/*.js'],
   seeds: ['dist/graphql/seed/*.js'],
   subscribers: ['dist/graphql/entity/BasicListener.js', 'dist/graphql/entity/**/*.listener.js'],
   migrations: ['dist/graphql/migrations/*.js'],

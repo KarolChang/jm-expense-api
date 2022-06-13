@@ -1,4 +1,4 @@
-import { LINE } from '@graphql/line/LINE'
+import { LINE } from '@/graphql/line/LINE'
 import { LineLog } from '@entity/lineLog'
 import { nanoid } from 'nanoid'
 import { TextMessage } from '@line/bot-sdk'
