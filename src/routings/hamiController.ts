@@ -5,8 +5,11 @@ import HamiAPI from '@/apis/hami'
 export class HamiController {
   @Get('/:team')
   async getHamiUrl(@Res() res: any, @Param('team') team: string) {
+    console.log('team: ', team)
     const index = this.teamCode.indexOf(team)
+    console.log('index: ', index)
     const { data } = await HamiAPI.getLiveUrl((this.basicCode + index).toString())
+    console.log('data: ', data)
     return res.json({
       url: data.url
     })

@@ -10,11 +10,13 @@ import { initSchedule } from '@graphql/schedule'
 import { nanoid } from 'nanoid'
 import { useExpressServer } from 'routing-controllers'
 import path from 'path'
+import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config()
 
 async function main() {
   const app = express()
+  app.use(cors())
 
   const startTime = new Date()
 
