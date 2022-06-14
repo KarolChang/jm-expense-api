@@ -229,6 +229,9 @@ type Notification implements Basic {
 
   """Update Date Time"""
   updatedAt: DateTime
+
+  """被通知的人"""
+  users: [User]
 }
 
 """通知Input"""
@@ -262,6 +265,9 @@ input NotificationInput {
 
   """uid"""
   uid: String
+
+  """被通知的人"""
+  users: [UserInput]
 }
 
 """通知紀錄"""
@@ -450,6 +456,9 @@ type User implements Basic {
 
   """lineUserId"""
   lineUserId: String
+
+  """通知"""
+  notifications: [Notification]
 
   """顯示頭像"""
   photoURL: String

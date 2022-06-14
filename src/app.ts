@@ -16,7 +16,6 @@ dotenv.config()
 
 async function main() {
   const app = express()
-  app.use(cors())
 
   const startTime = new Date()
 

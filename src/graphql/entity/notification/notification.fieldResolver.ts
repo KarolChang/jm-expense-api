@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm'
 import { Resolver, FieldResolver, Root } from 'type-graphql'
 import { Event } from '@entity/event'
 import { Notification } from '@entity/notification'
+import { User } from '@entity/user'
 
 @Resolver((of) => Notification)
 export class NotificationFieldResolver {
@@ -12,5 +13,14 @@ export class NotificationFieldResolver {
       .leftJoin('Event.notifications', 'notifications')
       .where('notifications.id = :notificationId', { notificationId: root.id })
       .getOne()
+  }
+
+  @FieldResolver((type) => [User])
+  async users(@Root() root: Notification): Promise<User[]> {
+    return await getRepository(User)
+      .createQueryBuilder('User')
+      .leftJoin('User.notifications', 'notifications')
+      .where('notifications.id = :notificationId', { notificationId: root.id })
+      .getMany()
   }
 }

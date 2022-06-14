@@ -12,6 +12,7 @@ export class NotificationQuery {
       .createQueryBuilder('Notification')
       .leftJoinAndSelect('Notification.event', 'event')
       .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('Notification.users', 'users')
     if (eventId) {
       query.andWhere('event.id = :eventId', { eventId })
     }

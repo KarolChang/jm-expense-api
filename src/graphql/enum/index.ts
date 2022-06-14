@@ -3,7 +3,8 @@ import { registerEnumType } from 'type-graphql'
 export enum NotifTypeEnum {
   account_day = 'account_day',
   payment_day = 'payment_day',
-  other = 'other'
+  other = 'other',
+  basic = 'basic'
 }
 
 registerEnumType(NotifTypeEnum, {

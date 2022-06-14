@@ -1,8 +1,9 @@
-import { Entity, Column, OneToMany } from 'typeorm'
+import { Entity, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@entity/Basic'
 import { Event } from '@entity/event'
 import { UserRoleEnum } from '@graphql/enum'
+import { Notification } from '@entity/notification'
 
 @Entity()
 @ObjectType({ description: '使用者', implements: Basic })
@@ -38,6 +39,11 @@ export class User extends Basic {
   @OneToMany((type) => Event, (event) => event.user)
   @Field((type) => [Event], { description: '事件' })
   events: Event[]
+
+  @ManyToMany((type) => Notification, (notif) => notif.users)
+  @JoinTable({ name: 'users_notifs' })
+  @Field((type) => [Notification], { description: '通知' })
+  notifications: Notification[]
 }
 
 @InputType({ description: '使用者Input' })

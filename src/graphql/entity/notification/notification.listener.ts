@@ -5,8 +5,8 @@ import { nanoid } from 'nanoid'
 import schedule from 'node-schedule'
 import { CustomJob } from '@graphql/CustomJob'
 import { ApolloError } from 'apollo-server-errors'
-import { lineBotPushTextMsg } from '@/utils/lineBotMsg'
-import { NotifRepeatTypeEnum } from '@graphql/enum'
+import { lineBotSendMsg } from '@/utils/lineBotMsg'
+import { NotifRepeatTypeEnum, LineActionEnum } from '@graphql/enum'
 // import dayjs from 'dayjs'
 // import numeral from 'numeral'
 
@@ -42,7 +42,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
   }
 
   // functions
-  formatCron(time: Date, type: string) {
+  formatCron(time: Date, type: NotifRepeatTypeEnum) {
     let cronTime
     switch (type) {
       case NotifRepeatTypeEnum.never:
@@ -53,14 +53,21 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
           time.getHours(),
           time.getMinutes()
         ).toString()
+        break
       case NotifRepeatTypeEnum.every_day:
         cronTime = `${time.getMinutes()} ${time.getHours()} * * *`
+        break
       case NotifRepeatTypeEnum.every_week:
         cronTime = `${time.getMinutes()} ${time.getHours()} * * ${time.getDay()}`
+        break
       case NotifRepeatTypeEnum.every_month:
         cronTime = `${time.getMinutes()} ${time.getHours()} ${time.getDate()} * *`
+        break
       case NotifRepeatTypeEnum.every_year:
         cronTime = `${time.getMinutes()} ${time.getHours()} ${time.getDate()} ${time.getMonth() + 1} *`
+        break
+      default:
+        break
     }
     if (!cronTime) {
       throw new ApolloError('FormatCron Fail', 'cron_undefined')
@@ -75,29 +82,44 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
       .createQueryBuilder('Notification')
       .leftJoinAndSelect('Notification.event', 'event')
       .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('Notification.users', 'users')
     const notif = await repo.where('Notification.id = :notifId', { notifId }).getOne()
-    console.log()
     if (!notif) {
       throw new ApolloError('Notification Does Not Exist', 'notification_id_not_found')
     }
     this.setJob(notif)
   }
 
-  setJob(notif: Notification) {
-    let cronTimeString: string | Date = notif.cronTimeString
-    if (notif.repeatType === NotifRepeatTypeEnum.never) {
-      cronTimeString = new Date(cronTimeString)
-    }
+  async setJob(notif: Notification) {
+    let cronTimeString: string = notif.cronTimeString
     const task: CustomJob = schedule.scheduleJob(cronTimeString, async () => {
-      console.log('[', new Date().toLocaleString(), '] ', notif.message)
       try {
-        await lineBotPushTextMsg(notif.event.user.lineUserId, notif.message)
+        let sendType
+        let lineUserId
+        if (!notif.event) {
+          if (notif.users.length > 1) {
+            sendType = LineActionEnum.multicast
+            lineUserId = notif.users.map((user) => user.lineUserId)
+          } else if (notif.users.length === 1) {
+            sendType = LineActionEnum.pushMessage
+            lineUserId = notif.users[0].lineUserId
+          } else {
+            throw new ApolloError('No User', 'users_not_found')
+          }
+        } else {
+          sendType = LineActionEnum.pushMessage
+          lineUserId = notif.event.user.lineUserId
+        }
+        await lineBotSendMsg(notif.message, sendType, lineUserId)
         this.insertNotifLogData(notif)
       } catch (error) {
         console.log('[ERROR-setJob] ', error)
       }
     })
-    task.uid = notif.uid
+    console.log('task!!!', task)
+    if (task) {
+      task.uid = notif.uid
+    }
   }
 
   async destroySchedule(oldUid?: string) {
