@@ -1,17 +1,8 @@
 import axios from 'axios'
 
-const baseURL = 'http://linebot20220114.herokuapp.com'
+const hamiURL = 'https://hamivideo.hinet.net/api/play.do'
 
-export const apiHelper = axios.create({
-  baseURL
+export const hamiApiHelper = axios.create({
+  baseURL: hamiURL,
+  headers: { Cookie: process.env.HAMI_COOKIE!, Host: 'hamivideo.hinet.net' }
 })
-
-export interface Message {
-  type: string
-  text: string
-}
-
-export interface LineInput {
-  to: string | string[]
-  messages: Message | Message[]
-}

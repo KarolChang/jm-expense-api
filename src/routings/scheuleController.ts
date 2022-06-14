@@ -2,9 +2,9 @@ import { JsonController, Get } from 'routing-controllers'
 import schedule from 'node-schedule'
 import { CustomJob } from '@/graphql/CustomJob'
 
-@JsonController()
+@JsonController('/schedule')
 export class ScheduleController {
-  @Get('/schedule')
+  @Get('/')
   async getJobs() {
     const jobs = schedule.scheduledJobs
     const results = []
