@@ -17,7 +17,7 @@ export const linkTemplate = (linkToken: string): Message => {
         contents: [
           {
             type: 'text',
-            text: '與 JM-Expense 連動',
+            text: '與 卡羅記帳 連動',
             weight: 'bold',
             size: 'lg',
             align: 'center'
@@ -29,7 +29,7 @@ export const linkTemplate = (linkToken: string): Message => {
             contents: [
               {
                 type: 'text',
-                text: '在JM-Expense中登入帳號\n即可與你的LINE做連動',
+                text: '在卡羅記帳登入帳號\n即可與你的LINE做連動',
                 size: 'sm',
                 color: '#0514f0',
                 margin: 'md',
@@ -51,7 +51,7 @@ export const linkTemplate = (linkToken: string): Message => {
             height: 'sm',
             action: {
               type: 'uri',
-              label: '前往JM-Expense',
+              label: '前往卡羅記帳',
               uri: `https://jm-expense-2022.firebaseapp.com/link?linkToken=${linkToken}`
             }
           }
@@ -98,7 +98,7 @@ export const linkedTemplate = (): Message => {
             contents: [
               {
                 type: 'text',
-                text: '你現在可以透過LINE來接收\nJM-Expense的通知訊息了！',
+                text: '你現在可以透過LINE來接收\n卡羅記帳的通知訊息了！',
                 size: 'sm',
                 color: '#0514f0',
                 margin: 'md',
@@ -149,7 +149,7 @@ export const unlinkedTemplate = (): Message => {
             contents: [
               {
                 type: 'text',
-                text: '若想連動請說"開始連動"\n將會再次進行line連動！',
+                text: '若想連動請點選選單的"開始連動"\n將會再次進行line連動！',
                 size: 'sm',
                 color: '#0514f0',
                 margin: 'md',

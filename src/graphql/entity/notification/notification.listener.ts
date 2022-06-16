@@ -1,4 +1,11 @@
-import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, getRepository } from 'typeorm'
+import {
+  EventSubscriber,
+  EntitySubscriberInterface,
+  InsertEvent,
+  UpdateEvent,
+  RemoveEvent,
+  getRepository
+} from 'typeorm'
 import { Notification } from '@entity/notification'
 import { NotifLog } from '@entity/notifLog'
 import { nanoid } from 'nanoid'
@@ -20,25 +27,40 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
 
   beforeInsert(event: InsertEvent<Notification>) {
     const notif = event.entity
+    console.log('beforeInsert!!!')
     notif.uid = nanoid()
     notif.cronTimeString = this.formatCron(notif.notif_time, notif.repeatType)
   }
 
   beforeUpdate(event: UpdateEvent<Notification>) {
     const notif = event.entity!
+    console.log('beforeUpdate!!!')
     this.oldUid = notif.uid
     notif.uid = nanoid()
     notif.cronTimeString = this.formatCron(notif.notif_time, notif.repeatType)
   }
 
+  beforeRemove(event: RemoveEvent<Notification>) {
+    console.log('beforeRemove!!!')
+    const notif = event.entity!
+    this.oldUid = notif.uid
+  }
+
   async afterInsert(event: InsertEvent<Notification>) {
+    console.log('afterInsert!!!', event.entity)
     this.setSchedule(event)
   }
 
   async afterUpdate(event: UpdateEvent<Notification>) {
+    console.log('afterUpdate!!!', event.entity)
     // 重設排程 -> 先刪掉排程
     await this.destroySchedule(this.oldUid)
     this.setSchedule(event)
+  }
+
+  async afterRemove() {
+    console.log('afterRemove!!!')
+    await this.destroySchedule(this.oldUid)
   }
 
   // functions
@@ -82,7 +104,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
       .createQueryBuilder('Notification')
       .leftJoinAndSelect('Notification.event', 'event')
       .leftJoinAndSelect('event.user', 'user')
-      .leftJoinAndSelect('Notification.users', 'users')
+      .leftJoinAndSelect('Notification.creator', 'creator')
     const notif = await repo.where('Notification.id = :notifId', { notifId }).getOne()
     if (!notif) {
       throw new ApolloError('Notification Does Not Exist', 'notification_id_not_found')
@@ -121,7 +143,6 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
         console.log('[ERROR-setJob] ', error)
       }
     })
-    console.log('task!!!', task)
     if (task) {
       task.uid = notif.uid
     }

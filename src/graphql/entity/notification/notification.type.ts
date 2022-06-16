@@ -49,7 +49,7 @@ export class Notification extends Basic {
   @Field({ description: 'cron時間字串' })
   cronTimeString: string
 
-  @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete', nullable: true })
+  @ManyToOne((type) => Event, (event) => event.notifications, { onDelete: 'CASCADE', nullable: true })
   @Field((type) => Event, { description: '事件' })
   event: Event
 
@@ -98,7 +98,7 @@ export class NotificationInput implements Partial<Notification> {
   @Field({ description: '文字顏色' })
   textColor: string
 
-  @Field((type) => [UserInput], { description: '通知創建者' })
+  @Field((type) => UserInput, { description: '通知創建者' })
   creator: User
 
   // @Field((type) => [GroupInput], { description: '被通知的群組' })

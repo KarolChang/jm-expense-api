@@ -14,6 +14,6 @@ export class EventMutation {
   @Mutation((returns) => Event, { description: '刪除事件' })
   async removeEvent(@Repo() repo: EventRepository, @Arg('id') id: number) {
     const event = await repo.findOneOrFail(id)
-    return repo.softRemove(event)
+    return repo.remove(event)
   }
 }

@@ -15,6 +15,6 @@ export class NotificationMutation {
   @Mutation((returns) => Notification, { description: '刪除通知' })
   async removeNotification(@Arg('id') id: number) {
     const notification = await this.repo.findOneOrFail(id)
-    return this.repo.softRemove(notification)
+    return this.repo.remove(notification)
   }
 }

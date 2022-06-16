@@ -237,7 +237,7 @@ type Notification implements Basic {
 """通知Input"""
 input NotificationInput {
   """通知創建者"""
-  creator: [UserInput]
+  creator: UserInput
 
   """發生時間"""
   happened_time: DateTime
