@@ -40,10 +40,14 @@ export class User extends Basic {
   @Field((type) => [Event], { description: '事件' })
   events: Event[]
 
-  @ManyToMany((type) => Notification, (notif) => notif.users)
-  @JoinTable({ name: 'users_notifs' })
-  @Field((type) => [Notification], { description: '通知' })
+  @OneToMany((type) => Notification, (notif) => notif.creator)
+  @Field((type) => [Notification], { description: '所有通知' })
   notifications: Notification[]
+
+  // @ManyToMany((type) => Notification, (notif) => notif.users)
+  // @JoinTable({ name: 'users_notifs' })
+  // @Field((type) => [Notification], { description: '通知' })
+  // notifications: Notification[]
 }
 
 @InputType({ description: '使用者Input' })

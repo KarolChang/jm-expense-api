@@ -94,20 +94,25 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
     let cronTimeString: string = notif.cronTimeString
     const task: CustomJob = schedule.scheduleJob(cronTimeString, async () => {
       try {
-        let sendType
+        let sendType = LineActionEnum.pushMessage
         let lineUserId
+        // if (!notif.event) {
+        //   if (notif.users.length > 1) {
+        //     sendType = LineActionEnum.multicast
+        //     lineUserId = notif.users.map((user) => user.lineUserId)
+        //   } else if (notif.users.length === 1) {
+        //     sendType = LineActionEnum.pushMessage
+        //     lineUserId = notif.users[0].lineUserId
+        //   } else {
+        //     throw new ApolloError('No User', 'users_not_found')
+        //   }
+        // } else {
+        //   sendType = LineActionEnum.pushMessage
+        //   lineUserId = notif.event.user.lineUserId
+        // }
         if (!notif.event) {
-          if (notif.users.length > 1) {
-            sendType = LineActionEnum.multicast
-            lineUserId = notif.users.map((user) => user.lineUserId)
-          } else if (notif.users.length === 1) {
-            sendType = LineActionEnum.pushMessage
-            lineUserId = notif.users[0].lineUserId
-          } else {
-            throw new ApolloError('No User', 'users_not_found')
-          }
+          lineUserId = notif.creator.lineUserId
         } else {
-          sendType = LineActionEnum.pushMessage
           lineUserId = notif.event.user.lineUserId
         }
         await lineBotSendMsg(notif.message, sendType, lineUserId)

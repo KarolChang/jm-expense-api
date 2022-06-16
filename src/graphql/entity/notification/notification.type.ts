@@ -49,7 +49,7 @@ export class Notification extends Basic {
   @Field({ description: 'cron時間字串' })
   cronTimeString: string
 
-  @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete' })
+  @ManyToOne((type) => Event, (event) => event.notifications, { orphanedRowAction: 'delete', nullable: true })
   @Field((type) => Event, { description: '事件' })
   event: Event
 
@@ -57,9 +57,13 @@ export class Notification extends Basic {
   @Field((type) => [NotifLog], { description: '通知紀錄' })
   notifLogs: NotifLog[]
 
-  @ManyToMany((type) => User, (user) => user.notifications)
-  @Field((type) => [User], { description: '被通知的人' })
-  users: User[]
+  @ManyToOne((type) => User, (user) => user.notifications)
+  @Field((type) => User, { description: '通知創建者' })
+  creator: User
+
+  // @ManyToMany((type) => User, (user) => user.notifications)
+  // @Field((type) => [User], { description: '被通知的人' })
+  // users: User[]
 }
 
 @InputType({ description: '通知Input' })
@@ -94,6 +98,9 @@ export class NotificationInput implements Partial<Notification> {
   @Field({ description: '文字顏色' })
   textColor: string
 
-  @Field((type) => [UserInput], { description: '被通知的人' })
-  users: User[]
+  @Field((type) => [UserInput], { description: '通知創建者' })
+  creator: User
+
+  // @Field((type) => [GroupInput], { description: '被通知的群組' })
+  // group: Group
 }

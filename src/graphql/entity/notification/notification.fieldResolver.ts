@@ -15,12 +15,12 @@ export class NotificationFieldResolver {
       .getOne()
   }
 
-  @FieldResolver((type) => [User])
-  async users(@Root() root: Notification): Promise<User[]> {
+  @FieldResolver((type) => User)
+  async creator(@Root() root: Notification): Promise<User | undefined> {
     return await getRepository(User)
       .createQueryBuilder('User')
       .leftJoin('User.notifications', 'notifications')
       .where('notifications.id = :notificationId', { notificationId: root.id })
-      .getMany()
+      .getOne()
   }
 }

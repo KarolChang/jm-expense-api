@@ -185,6 +185,9 @@ type Notification implements Basic {
   """Create Date Time"""
   createdAt: DateTime
 
+  """通知創建者"""
+  creator: User
+
   """cron時間字串"""
   cronTimeString: String
 
@@ -229,13 +232,13 @@ type Notification implements Basic {
 
   """Update Date Time"""
   updatedAt: DateTime
-
-  """被通知的人"""
-  users: [User]
 }
 
 """通知Input"""
 input NotificationInput {
+  """通知創建者"""
+  creator: [UserInput]
+
   """發生時間"""
   happened_time: DateTime
 
@@ -265,9 +268,6 @@ input NotificationInput {
 
   """uid"""
   uid: String
-
-  """被通知的人"""
-  users: [UserInput]
 }
 
 """通知紀錄"""
@@ -346,8 +346,11 @@ type Query {
   """依ID取得通知"""
   notification(id: Float): Notification
 
-  """依條件取得通知"""
-  notifications(eventId: Float, userId: Float): [Notification]
+  """依type取得通知"""
+  notificationsByType(type: String): [Notification]
+
+  """依user取得通知"""
+  notificationsByUser(userId: Float): [Notification]
 
   """依ID取得通知"""
   notifLog(id: Float): NotifLog
@@ -457,7 +460,7 @@ type User implements Basic {
   """lineUserId"""
   lineUserId: String
 
-  """通知"""
+  """所有通知"""
   notifications: [Notification]
 
   """顯示頭像"""
