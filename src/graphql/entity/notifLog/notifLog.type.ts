@@ -18,7 +18,7 @@ export class NotifLog extends Basic {
   @Field({ description: '實際通知時間' })
   actual_notif_time: Date
 
-  @ManyToOne((type) => Notification, (notif) => notif.notifLogs, { orphanedRowAction: 'delete' })
+  @ManyToOne((type) => Notification, (notif) => notif.notifLogs, { onDelete: 'CASCADE' })
   @Field((type) => Notification, { description: '所屬事件' })
   notification: Notification
 }

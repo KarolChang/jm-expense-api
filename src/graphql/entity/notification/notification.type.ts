@@ -57,7 +57,7 @@ export class Notification extends Basic {
   @Field((type) => Event, { description: '事件' })
   event: Event
 
-  @OneToMany((type) => NotifLog, (log) => log.notification)
+  @OneToMany((type) => NotifLog, (log) => log.notification, { cascade: true })
   @Field((type) => [NotifLog], { description: '通知紀錄' })
   notifLogs: NotifLog[]
 
