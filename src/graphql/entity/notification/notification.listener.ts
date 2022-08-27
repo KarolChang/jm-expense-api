@@ -34,7 +34,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
 
   beforeUpdate(event: UpdateEvent<Notification>) {
     const notif = event.entity!
-    console.log('beforeUpdate!!!')
+    console.log('beforeUpdate!!!', notif)
     this.oldUid = notif.uid
     notif.uid = nanoid()
     notif.cronTimeString = this.formatCron(notif.notif_time, notif.repeatType)
@@ -47,15 +47,25 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
   }
 
   async afterInsert(event: InsertEvent<Notification>) {
-    console.log('afterInsert!!!', event.entity)
+    console.log('afterInsert!!!')
     this.setSchedule(event)
   }
 
   async afterUpdate(event: UpdateEvent<Notification>) {
-    console.log('afterUpdate!!!', event.entity)
-    // 重設排程 -> 先刪掉排程
-    await this.destroySchedule(this.oldUid)
-    this.setSchedule(event)
+    console.log('afterUpdate!!!', this.oldUid)
+    if (!this.oldUid) return
+    if (event.entity!.enable) {
+      // 刪掉排程 -> 重設排程
+      if (this.oldUid) {
+        await this.destroySchedule(this.oldUid)
+        this.setSchedule(event)
+      } else {
+        throw new ApolloError('Notification AfterUpdate Error', 'oldUid_undefined')
+      }
+    } else {
+      // 有的話就刪掉排程
+      await this.destroySchedule(this.oldUid)
+    }
   }
 
   async afterRemove() {
@@ -109,7 +119,10 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
     if (!notif) {
       throw new ApolloError('Notification Does Not Exist', 'notification_id_not_found')
     }
-    this.setJob(notif)
+    console.log('[setSchedule] notif!!!', notif)
+    if (notif.enable) {
+      this.setJob(notif)
+    }
   }
 
   async setJob(notif: Notification) {
@@ -132,6 +145,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
         //   sendType = LineActionEnum.pushMessage
         //   lineUserId = notif.event.user.lineUserId
         // }
+        console.log('notif!!!', notif)
         if (!notif.event) {
           lineUserId = notif.creator.lineUserId
         } else {
@@ -146,6 +160,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
     if (task) {
       task.uid = notif.uid
     }
+    // task.uid = task ? notif.uid : 'Invalid Job'
   }
 
   async destroySchedule(oldUid?: string) {

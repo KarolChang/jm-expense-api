@@ -194,6 +194,9 @@ type Notification implements Basic {
   """Delete Date Time"""
   deleteAt: DateTime
 
+  """是否啟用"""
+  enable: Boolean
+
   """事件"""
   event: Event
 
@@ -238,6 +241,9 @@ type Notification implements Basic {
 input NotificationInput {
   """通知創建者"""
   creator: UserInput
+
+  """是否啟用"""
+  enable: Boolean
 
   """發生時間"""
   happened_time: DateTime

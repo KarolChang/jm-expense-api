@@ -49,6 +49,10 @@ export class Notification extends Basic {
   @Field({ description: 'cron時間字串' })
   cronTimeString: string
 
+  @Column()
+  @Field({ description: '是否啟用' })
+  enable: boolean
+
   @ManyToOne((type) => Event, (event) => event.notifications, { onDelete: 'CASCADE', nullable: true })
   @Field((type) => Event, { description: '事件' })
   event: Event
@@ -97,6 +101,9 @@ export class NotificationInput implements Partial<Notification> {
 
   @Field({ description: '文字顏色' })
   textColor: string
+
+  @Field({ description: '是否啟用' })
+  enable: boolean
 
   @Field((type) => UserInput, { description: '通知創建者' })
   creator: User
