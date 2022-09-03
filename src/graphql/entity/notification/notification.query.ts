@@ -9,7 +9,11 @@ export class NotificationQuery {
 
   @Query((returns) => [Notification], { description: '依type取得通知' })
   async notificationsByType(@Arg('type') type?: NotifTypeEnum): Promise<Notification[]> {
-    const query = this.repo.createQueryBuilder('Notification')
+    const query = this.repo
+      .createQueryBuilder('Notification')
+      .leftJoinAndSelect('Notification.event', 'event')
+      .leftJoinAndSelect('event.user', 'user')
+      .leftJoinAndSelect('Notification.creator', 'creator')
     if (type) {
       query.andWhere('Notification.type = :type', { type })
     }
