@@ -145,7 +145,7 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
         //   sendType = LineActionEnum.pushMessage
         //   lineUserId = notif.event.user.lineUserId
         // }
-        console.log('notif!!!', notif)
+        console.log('[setJob] notif!!!', notif)
         if (!notif.event) {
           lineUserId = notif.creator.lineUserId
         } else {

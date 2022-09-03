@@ -9,5 +9,6 @@ export const initSchedule = async () => {
     NOTIF_EVENT_SUBSCRIBER.setJob(notif)
   }
   const jobs = schedule.scheduledJobs
+  console.log('jobs', jobs)
   console.log(`Jobs Length = ${Object.keys(jobs).length}`)
 }
