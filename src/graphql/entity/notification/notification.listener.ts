@@ -54,18 +54,19 @@ export class NotifEventSubscriber implements EntitySubscriberInterface<Notificat
   async afterUpdate(event: UpdateEvent<Notification>) {
     console.log('afterUpdate!!!', this.oldUid)
     if (!this.oldUid) return
-    if (event.entity!.enable) {
-      // 刪掉排程 -> 重設排程
-      if (this.oldUid) {
-        await this.destroySchedule(this.oldUid)
-        this.setSchedule(event)
-      } else {
-        throw new ApolloError('Notification AfterUpdate Error', 'oldUid_undefined')
-      }
-    } else {
-      // 有的話就刪掉排程
+    // enable目前是傳入 undefined
+    // if (event.entity!.enable) {
+    // 刪掉排程 -> 重設排程
+    if (this.oldUid) {
       await this.destroySchedule(this.oldUid)
+      this.setSchedule(event)
+    } else {
+      throw new ApolloError('Notification AfterUpdate Error', 'oldUid_undefined')
     }
+    // } else {
+    // 有的話就刪掉排程
+    // await this.destroySchedule(this.oldUid)
+    // }
   }
 
   async afterRemove() {
