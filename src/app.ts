@@ -21,7 +21,7 @@ async function main() {
 
   await createConnection()
 
-  console.log('Step1: DB Success Connection......')
+  console.log('Step1: DB Success Connection.......')
 
   useExpressServer(app, {
     controllers:
