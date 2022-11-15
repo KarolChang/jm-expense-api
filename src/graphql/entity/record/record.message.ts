@@ -20,11 +20,8 @@ export class RecordLineMsg extends LineMsg<Record> {
     try {
       // const to = [process.env.JIANMIAU_USERID!, process.env.KAROL_USERID!]
       const to = [process.env.KAROL_USERID!]
-
       const RECORD_MUTATION = new RecordMutation()
       const fieldName = this.ctx.info!.fieldName
-      console.log('fieldName!!!', fieldName)
-      console.log('name!!!', RECORD_MUTATION.saveRecord.name)
       let text = this.ctx.user!.displayName
       switch (fieldName) {
         case RECORD_MUTATION.saveRecord.name: {
@@ -54,18 +51,10 @@ export class RecordLineMsg extends LineMsg<Record> {
   }
 
   async lineLog(res: any) {
-    console.log('res!!!', res)
     const { to, message, action } = res.data
     let lineLog
     lineLog = new LineLog(nanoid(), to, message, action)
     const lineLogRepo = this.manager.getRepository(LineLog)
-    if (res.status === 'error') {
-      lineLog = new LineLog(nanoid(), to, message, action, res.error)
-      await lineLogRepo.save(lineLog)
-      throw new ApolloError('LineMsg Error', 'line_message_error')
-    }
-
-    console.log('lineLog!!!', lineLog)
     await lineLogRepo.save(lineLog)
   }
 }

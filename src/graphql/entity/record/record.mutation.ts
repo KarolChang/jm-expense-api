@@ -7,7 +7,7 @@ export class RecordMutation {
   @Mutation((returns) => Record, { description: '儲存' })
   async saveRecord(@Repo() repo: RecordRepository, @Arg('record') input: RecordInput) {
     let record = repo.create(input)
-    return await repo.save(record)
+    return await repo.save(record, { data: { ctx: repo.ctx } })
   }
 
   @Authorized()

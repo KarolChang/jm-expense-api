@@ -1,0 +1,8 @@
+# package.json
+"_moduleAliases": {
+  "@": "dist",
+  "@graphql": "dist/graphql",
+  "@entity": "dist/graphql/entity"
+}
+
+# Record可以加入給誰的欄位 (目前正是豬涵付, 負是建喵付)

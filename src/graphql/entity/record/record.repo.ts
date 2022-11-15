@@ -10,7 +10,7 @@ import { AmountByMonth } from './record.type'
 @EntityRepository(Record)
 export class RecordRepository extends Repository<Record> {
   ctx: CustomContext
-  log: boolean = true
+  log: boolean = false
 
   queryBuilder() {
     return this.createQueryBuilder('Record').orderBy('Record.createdAt')
@@ -21,16 +21,17 @@ export class RecordRepository extends Repository<Record> {
     const yearMonth = year_month ? year_month : dayjs().format('YYYY-MM')
     const amount = new AmountByMonth(yearMonth)
     const { totalAmount } = await this.queryBuilder()
+      .where('Record.date like :keyword', { keyword: `${yearMonth}%` })
+      // .where('Record.date like :keyword', { keyword: `2022-11%` })
       .select('SUM(Record.amount)', 'totalAmount')
-      .where('Record.date like :keyword', { keyword: `${year_month}%` })
       .getRawOne()
     const { closedAmount } = await this.queryBuilder()
       .select('SUM(Record.amount)', 'closedAmount')
-      .where('Record.date like :keyword', { keyword: `${year_month}%` })
+      .where('Record.date like :keyword', { keyword: `${yearMonth}%` })
       .andWhere('Record.isClosed = true')
       .getRawOne()
-    amount.totalAmount = totalAmount
-    amount.closedAmount = closedAmount
+    amount.totalAmount = totalAmount === null ? 0 : totalAmount
+    amount.closedAmount = closedAmount === null ? 0 : closedAmount
     return amount
   }
 

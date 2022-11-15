@@ -9,7 +9,7 @@ import { ApolloError } from 'apollo-server-errors'
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   ctx: CustomContext
-  log: boolean = true
+  log: boolean = false
 
   queryBuilder() {
     return this.createQueryBuilder('User').orderBy('User.createdAt')

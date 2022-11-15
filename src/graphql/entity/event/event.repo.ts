@@ -9,7 +9,7 @@ import { ApolloError } from 'apollo-server-errors'
 @EntityRepository(Event)
 export class EventRepository extends Repository<Event> {
   ctx: CustomContext
-  log: boolean = true
+  log: boolean = false
 
   queryBuilder() {
     return this.createQueryBuilder('Event').orderBy('Event.createdAt')

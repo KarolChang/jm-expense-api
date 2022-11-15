@@ -15,6 +15,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 async function main() {
+  const isProd = process.env.NODE_ENV === 'production'
   const app = express()
 
   const startTime = new Date()
@@ -24,17 +25,13 @@ async function main() {
   console.log('Step1: DB Success Connection.......')
 
   useExpressServer(app, {
-    controllers:
-      process.env.NODE_ENV === 'production'
-        ? [path.resolve('./dist/routings/*.js')]
-        : [path.resolve('./src/routings/*.ts')]
+    controllers: isProd ? [path.resolve('./dist/routings/*.js')] : [path.resolve('./src/routings/*.ts')]
   })
 
   const schema = await buildSchema({
-    resolvers:
-      process.env.NODE_ENV === 'production'
-        ? ([path.resolve('./dist/graphql/entity/**/index.js')] as NonEmptyArray<string>)
-        : ([path.resolve('./src/graphql/entity/**/index.ts')] as NonEmptyArray<string>),
+    resolvers: isProd
+      ? ([path.resolve('./dist/graphql/entity/**/index.js')] as NonEmptyArray<string>)
+      : ([path.resolve('./src/graphql/entity/**/index.ts')] as NonEmptyArray<string>),
     // ([path.resolve('./dist/graphql/entity/**/index{.js,.ts}')] as NonEmptyArray<string>)
     dateScalarMode: 'isoDate', // 預設是 'isoDate'
     nullableByDefault: true,

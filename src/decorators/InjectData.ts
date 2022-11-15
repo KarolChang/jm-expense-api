@@ -13,7 +13,7 @@ export function InjectData() {
               option.data.log = this.log
               option.data.entity = entity
             } else {
-              option = { data: { ctx: this.this, log: this.log, entity } }
+              option = { data: { ctx: this.ctx, log: this.log, entity } }
             }
           }
 

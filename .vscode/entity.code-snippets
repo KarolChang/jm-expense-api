@@ -47,7 +47,7 @@
       "@EntityRepository(${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/})",
       "export class ${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}Repository extends Repository<${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}> {",
       "  ctx: CustomContext",
-      "  log: boolean = true",
+      "  log: boolean = false",
       "",
       "  queryBuilder() {",
       "    return this.createQueryBuilder('${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}').orderBy('${TM_FILENAME/^([^.]+)\\..+$/${1:/capitalize}/}.createdAt')",
