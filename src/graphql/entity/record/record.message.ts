@@ -23,6 +23,7 @@ export class RecordLineMsg extends LineMsg<Record> {
       const RECORD_MUTATION = new RecordMutation()
       const fieldName = this.ctx.info!.fieldName
       let text = this.ctx.user!.displayName
+      const { merchant, item, amount } = this.entity
       switch (fieldName) {
         case RECORD_MUTATION.saveRecord.name: {
           if (this.action === 'INSERT') {
@@ -36,11 +37,13 @@ export class RecordLineMsg extends LineMsg<Record> {
           text += '刪除了一筆紀錄 →\n'
           break
         }
+        case RECORD_MUTATION.closeRecord.name: {
+          return null
+        }
         default:
           break
       }
 
-      const { merchant, item, amount } = this.entity
       text += `${merchant}-${item} $${amount}`
       const message: Message = { type: 'text', text }
       await LINE.multicast(to, message)
@@ -51,6 +54,7 @@ export class RecordLineMsg extends LineMsg<Record> {
   }
 
   async lineLog(res: any) {
+    if (res === null) return
     const { to, message, action } = res.data
     let lineLog
     lineLog = new LineLog(nanoid(), to, message, action)

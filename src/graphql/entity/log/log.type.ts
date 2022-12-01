@@ -5,7 +5,12 @@ import { CustomContext } from '@graphql/auth/customContext'
 @Entity()
 @ObjectType({ description: 'Log' })
 export class Log {
-  constructor(context: CustomContext, entity: any, action: 'INSERT' | 'UPDATE' | 'SOFT_REMOVE' | 'REMOVE') {
+  constructor(
+    context: CustomContext,
+    entity: any,
+    oldEntity: any,
+    action: 'INSERT' | 'UPDATE' | 'SOFT_REMOVE' | 'REMOVE'
+  ) {
     if (context && entity && action) {
       this.uuid = context.uuid
       // userEmail & userDisplayName => 在註冊時使用 entity 的資訊
@@ -15,6 +20,7 @@ export class Log {
       this.entityId = entity.id
       this.entityName = entity.constructor.name
       this.entity = entity
+      this.oldEntity = oldEntity
       this.operationType = context.info!.operation.operation.toUpperCase()
       this.operationName = context.info!.operation.name!.value
       this.fieldName = context.info!.fieldName
@@ -59,6 +65,12 @@ export class Log {
 
   @Field()
   entityJsonString: string
+
+  @Column({ type: 'json' })
+  oldEntity: any
+
+  @Field()
+  oldEntityJsonString: string
 
   @Column()
   @Field()

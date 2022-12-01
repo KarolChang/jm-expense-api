@@ -10,7 +10,7 @@ import { AmountByMonth } from './record.type'
 @EntityRepository(Record)
 export class RecordRepository extends Repository<Record> {
   ctx: CustomContext
-  log: boolean = false
+  log: boolean = true
 
   queryBuilder() {
     return this.createQueryBuilder('Record').orderBy('Record.createdAt')
@@ -36,10 +36,10 @@ export class RecordRepository extends Repository<Record> {
   }
 
   // 結算
-  async close(records: RecordInput[]) {
-    const recordIds = records.map((e: RecordInput) => e.id)
-    return this.update(recordIds, { isClosed: true })
-  }
+  // async close(records: RecordInput[]) {
+  //   const recordIds = records.map((e: RecordInput) => e.id)
+  //   return this.update(recordIds, { isClosed: true })
+  // }
 }
 
 export const getRecordRepo = () => getCustomRepository(RecordRepository)

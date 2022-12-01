@@ -2,13 +2,22 @@ import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent, R
 import { Log } from '@entity/log'
 import { Container } from 'typedi'
 import { LineMsg } from '@entity/LineMsg'
+import { Record } from '@entity/record'
 
 type AllEvent<T> = UpdateEvent<T> | InsertEvent<T> | RemoveEvent<T>
 
 @EventSubscriber()
 export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
+  oldEntity: any = null
+
   beforeInsert(event: InsertEvent<any>) {}
-  beforeUpdate(event: UpdateEvent<any>) {}
+  async beforeUpdate(event: UpdateEvent<any>) {
+    if (event.entity?.constructor.name === 'Record') {
+      const recordRepo = event.manager.getRepository(Record)
+      const oldRecord = await recordRepo.findOneOrFail(event.entity.id)
+      this.oldEntity = oldRecord
+    }
+  }
   beforeSoftRemove(event: RemoveEvent<any>) {}
   beforeRemove(event: RemoveEvent<any>) {}
 
@@ -44,10 +53,13 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     // decorator: InjectData (先在repo方法中加入data資訊)
     const data = event.queryRunner.data
     const entity = event.entity
+    // LineLog不要紀錄!!
+    if (entity.constructor.name === 'LineLog') return
     console.log('[addLog]', action, entity.constructor.name, data)
     if (data.ctx) {
       if (data.log) {
-        const log = new Log(data.ctx, entity, action)
+        const oldEntity = action === 'UPDATE' ? this.oldEntity : null
+        const log = new Log(data.ctx, entity, oldEntity, action)
         const logRepo = event.manager.getRepository(Log)
         return await logRepo.save(log, { listeners: false })
       }

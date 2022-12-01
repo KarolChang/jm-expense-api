@@ -136,6 +136,7 @@ type Log {
   errorMessage: String
   fieldName: String
   id: Float
+  oldEntityJsonString: String
   operationName: String
   operationType: String
   sqlAction: String

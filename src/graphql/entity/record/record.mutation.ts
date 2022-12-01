@@ -14,12 +14,14 @@ export class RecordMutation {
   @Mutation((returns) => Record, { description: '刪除' })
   async removeRecord(@Repo() repo: RecordRepository, @Arg('id') id: number) {
     const record = await repo.findOneOrFail(id)
-    return repo.softRemove(record)
+    return repo.softRemove(record, { data: { ctx: repo.ctx } })
   }
 
   @Authorized()
   @Mutation((returns) => Record, { description: '結算' })
   async closeRecord(@Repo() repo: RecordRepository, @Arg('records', (type) => [RecordInput]) records: RecordInput[]) {
-    return repo.close(records)
+    const handledRecords = records.map((record) => ({ ...record, isClosed: true }))
+    const allRecords = repo.create(handledRecords)
+    return await repo.save(allRecords, { data: { ctx: repo.ctx } })
   }
 }
