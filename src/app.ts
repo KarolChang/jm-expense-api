@@ -15,6 +15,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 async function main() {
+  console.log('TYPEORM_URL: ', process.env.TYPEORM_URL)
+  console.log('NODE_ENV: ', process.env.NODE_ENV)
+
   const isProd = process.env.NODE_ENV === 'production'
   const app = express()
 
@@ -74,8 +77,9 @@ async function main() {
 
   console.log('Step3: Schedules Success Initialize......')
 
-  app.listen(process.env.PORT || 4100, () => {
-    console.log(`Step4: Server has started at http://localhost:${process.env.PORT}/graphql`)
+  const PORT = process.env.DOCKER_PORT
+  app.listen(PORT, () => {
+    console.log(`Step4: Server has started at http://localhost:${PORT}/graphql`)
     // Launch Time
     const finishTime = new Date()
     const time = finishTime.getTime() - startTime.getTime()

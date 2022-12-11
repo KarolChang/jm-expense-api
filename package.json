@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "postinstall": "tsc",
+    "build": "tsc",
     "start": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist/app.js",
     "dev": "NODE_ENV=development nodemon --config nodemon.json --exec npm run serve",
     "serve": "ts-node -r tsconfig-paths/register src/app.ts",
@@ -14,7 +14,11 @@
     "migrate_revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert",
     "migrate_gen:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:generate -n migration",
     "migrate_run:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:run",
-    "migrate_revert:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert"
+    "migrate_revert:prod": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register ./node_modules/typeorm/cli migration:revert",
+    "docker:build": "docker image build -t jm-api-image .",
+    "docker:run": "docker run -dit -p 24000:24000 --name jm-api jm-api-image",
+    "install:peer": "npm i --legacy-peer-deps",
+    "docker:comp": "docker-compose up -d"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +28,7 @@
     "apollo-server-express": "^3.6.7",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
-    "class-transformer": "^0.5.1",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.13.2",
     "dayjs": "^1.11.2",
     "dotenv": "^16.0.0",
@@ -46,15 +50,15 @@
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "@types/node-schedule": "^2.1.0",
     "@types/numeral": "^2.0.2",
-    "@typescript-eslint/parser": "^5.22.0",
-    "eslint": "^8.14.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-type-graphql": "^1.0.0",
-    "nodemon": "^2.0.16",
-    "ts-node": "^10.7.0",
-    "tsconfig-paths": "^4.0.0",
-    "typescript": "^4.6.4"
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1",
+    "typescript": "^4.9.3"
   }
 }
