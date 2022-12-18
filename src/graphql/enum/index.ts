@@ -46,3 +46,14 @@ registerEnumType(LineActionEnum, {
   name: 'LineActionEnum',
   description: 'Line發送訊息方法 enum'
 })
+
+export enum RecordLogActionEnum {
+  create = 'create',
+  edit = 'edit',
+  close = 'close'
+}
+
+registerEnumType(RecordLogActionEnum, {
+  name: 'RecordLogActionEnum',
+  description: '紀錄行為 enum'
+})

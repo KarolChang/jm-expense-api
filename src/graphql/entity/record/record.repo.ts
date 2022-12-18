@@ -10,7 +10,7 @@ import { AmountByMonth } from './record.type'
 @EntityRepository(Record)
 export class RecordRepository extends Repository<Record> {
   ctx: CustomContext
-  log: boolean = true
+  log: boolean = false
 
   queryBuilder() {
     return this.createQueryBuilder('Record').orderBy('Record.createdAt')

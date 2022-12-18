@@ -344,6 +344,9 @@ type Query {
   """依ID取得"""
   log(id: Float): Log
 
+  """依Action取得"""
+  logs(action: String): RecordLog
+
   """依UUID取得"""
   logsByUUID(uuid: String): [Log]
 
@@ -410,6 +413,9 @@ type Record implements Basic {
   """商家"""
   merchant: String
 
+  """所屬紀錄Logs"""
+  recordLogs: [RecordLog]
+
   """Update Date Time"""
   updatedAt: DateTime
 
@@ -436,6 +442,45 @@ input RecordInput {
 
   """紀錄創建者"""
   user: UserInput
+}
+
+"""紀錄Log"""
+type RecordLog implements Basic {
+  """紀錄行為"""
+  action: String
+
+  """Create Date Time"""
+  createdAt: DateTime
+
+  """Delete Date Time"""
+  deleteAt: DateTime
+
+  """id"""
+  id: Float
+
+  """資訊"""
+  info: RecordLogInfo
+
+  """所屬紀錄們"""
+  records: [Record]
+
+  """Update Date Time"""
+  updatedAt: DateTime
+
+  """事件觸發者"""
+  user: User
+}
+
+"""紀錄Log資訊"""
+type RecordLogInfo {
+  """結算金額"""
+  closedAmount: Float
+
+  """行為之後的紀錄"""
+  record_after: Record
+
+  """行為之前的紀錄"""
+  record_before: Record
 }
 
 """使用者"""
@@ -472,6 +517,9 @@ type User implements Basic {
 
   """顯示頭像"""
   photoURL: String
+
+  """紀錄Logs"""
+  recordLogs: [RecordLog]
 
   """角色"""
   role: String

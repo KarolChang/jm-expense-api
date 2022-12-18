@@ -1,7 +1,8 @@
-import { Entity, Column, ManyToOne, RelationId } from 'typeorm'
+import { Entity, Column, ManyToOne, RelationId, ManyToMany, JoinTable } from 'typeorm'
 import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@entity/Basic'
 import { User, UserInput } from '@entity/user'
+import { RecordLog } from '@entity/recordLog'
 
 @Entity()
 @ObjectType({ description: '紀錄', implements: Basic })
@@ -32,6 +33,11 @@ export class Record extends Basic {
 
   @RelationId((e: Record) => e.user)
   userId: number
+
+  @ManyToMany((type) => RecordLog)
+  @JoinTable({ name: 'recordLogs_records' })
+  @Field((type) => [RecordLog], { description: '所屬紀錄Logs' })
+  recordLogs: RecordLog[]
 }
 
 @InputType({ description: '紀錄Input' })
