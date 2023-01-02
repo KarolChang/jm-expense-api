@@ -148,7 +148,7 @@ type Log {
 
 type Mutation {
   """結算"""
-  closeRecord(records: [RecordInput]): Record
+  closeRecord(amount: Float, records: [RecordInput]): [Record]
 
   """刪除事件"""
   removeEvent(id: Float): Event
@@ -344,9 +344,6 @@ type Query {
   """依ID取得"""
   log(id: Float): Log
 
-  """依Action取得"""
-  logs(action: String): RecordLog
-
   """依UUID取得"""
   logsByUUID(uuid: String): [Log]
 
@@ -370,6 +367,9 @@ type Query {
 
   """依ID取得"""
   record(id: Float): Record
+
+  """依Action取得"""
+  recordLogs(action: String): [RecordLog]
 
   """依條件取得"""
   records: [Record]
@@ -413,7 +413,7 @@ type Record implements Basic {
   """商家"""
   merchant: String
 
-  """所屬紀錄Logs"""
+  """紀錄logs"""
   recordLogs: [RecordLog]
 
   """Update Date Time"""
@@ -461,7 +461,7 @@ type RecordLog implements Basic {
   """資訊"""
   info: RecordLogInfo
 
-  """所屬紀錄們"""
+  """紀錄們"""
   records: [Record]
 
   """Update Date Time"""

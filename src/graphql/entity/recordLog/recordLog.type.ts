@@ -3,7 +3,7 @@ import { Field, ObjectType, InputType } from 'type-graphql'
 import { Basic } from '@entity/Basic'
 import { Notification, NotificationInput } from '@entity/notification'
 import { RecordLogActionEnum } from '@/graphql/enum'
-import { Record } from '@entity/record'
+import { Record, RecordInput } from '@entity/record'
 import { User } from '@entity/user'
 
 @ObjectType({ description: '紀錄Log資訊' })
@@ -21,6 +21,14 @@ export class RecordLogInfo {
 @Entity()
 @ObjectType({ description: '紀錄Log', implements: Basic })
 export class RecordLog extends Basic {
+  constructor(action: RecordLogActionEnum, info: RecordLogInfo, user: User, records: Record[]) {
+    super()
+    this.action = action
+    this.info = info
+    this.user = user
+    this.records = records
+  }
+
   @Column({ type: 'enum', enum: RecordLogActionEnum })
   @Field({ description: '紀錄行為' })
   action: RecordLogActionEnum
@@ -36,11 +44,7 @@ export class RecordLog extends Basic {
   @RelationId((e: RecordLog) => e.user)
   userId: number
 
-  @ManyToMany((type) => Record)
-  @JoinTable({ name: 'recordLogs_records' })
-  @Field((type) => [Record], { description: '所屬紀錄們' })
+  @ManyToMany((type) => Record, (record) => record.recordLogs)
+  @Field((type) => [Record], { description: '紀錄們' })
   records: Record[]
-
-  @RelationId((e: RecordLog) => e.records)
-  recordIds: number[]
 }

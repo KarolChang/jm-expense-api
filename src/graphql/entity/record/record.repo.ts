@@ -35,6 +35,14 @@ export class RecordRepository extends Repository<Record> {
     return amount
   }
 
+  // 結算總額
+  async checkCloseAmount(records: RecordInput[], closeAmount: number) {
+    const recordIds = records.map((record)=> record.id)
+    const { totalAmount } = await this.queryBuilder().whereInIds(recordIds).andWhere('Record.isClosed = false').select('SUM(Record.amount)', 'totalAmount')
+    .getRawOne()
+    return +totalAmount === closeAmount
+  }
+
   // 結算
   // async close(records: RecordInput[]) {
   //   const recordIds = records.map((e: RecordInput) => e.id)

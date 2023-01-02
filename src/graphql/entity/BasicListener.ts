@@ -55,7 +55,6 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     const entity = event.entity
     // LineLog不要紀錄!!
     if (entity.constructor.name === 'LineLog') return
-    console.log('[addLog]', action, entity.constructor.name, data)
     if (data.ctx) {
       if (data.log) {
         const oldEntity = action === 'UPDATE' ? this.oldEntity : null

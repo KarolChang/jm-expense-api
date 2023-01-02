@@ -48,9 +48,9 @@ registerEnumType(LineActionEnum, {
 })
 
 export enum RecordLogActionEnum {
-  create = 'create',
-  edit = 'edit',
-  close = 'close'
+  INSERT = 'INSERT',
+  UPDATE = 'UPDATE',
+  CLOSE = 'CLOSE'
 }
 
 registerEnumType(RecordLogActionEnum, {

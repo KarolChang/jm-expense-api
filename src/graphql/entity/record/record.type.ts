@@ -34,9 +34,9 @@ export class Record extends Basic {
   @RelationId((e: Record) => e.user)
   userId: number
 
-  @ManyToMany((type) => RecordLog)
-  @JoinTable({ name: 'recordLogs_records' })
-  @Field((type) => [RecordLog], { description: '所屬紀錄Logs' })
+  @ManyToMany((type) => RecordLog, (recordLog) => recordLog.records)
+  @JoinTable({ name: 'records_recordLogs' })
+  @Field((type) => [RecordLog], { description: '紀錄logs' })
   recordLogs: RecordLog[]
 }
 
