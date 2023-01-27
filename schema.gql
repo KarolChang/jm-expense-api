@@ -372,7 +372,7 @@ type Query {
   recordLogs(action: String): [RecordLog]
 
   """依條件取得"""
-  records: [Record]
+  records(isClosed: Boolean): [Record]
 
   """計算月總額"""
   recordsAmountByMonth(year_month: String): AmountByMonth
@@ -396,7 +396,7 @@ type Record implements Basic {
   createdAt: DateTime
 
   """日期"""
-  date: DateTime
+  date: String
 
   """Delete Date Time"""
   deleteAt: DateTime
@@ -429,10 +429,13 @@ input RecordInput {
   amount: Float
 
   """日期"""
-  date: DateTime
+  date: String
 
   """id"""
   id: Float
+
+  """是否已結算"""
+  isClosed: Boolean
 
   """項目"""
   item: String
@@ -520,6 +523,9 @@ type User implements Basic {
 
   """紀錄Logs"""
   recordLogs: [RecordLog]
+
+  """記帳紀錄"""
+  records: [Record]
 
   """角色"""
   role: String

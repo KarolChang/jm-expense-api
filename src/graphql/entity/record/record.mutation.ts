@@ -8,6 +8,8 @@ import { Message } from '@line/bot-sdk'
 import { LINE } from '@/graphql/line/LINE'
 import { LineLog } from '@entity/lineLog'
 import { nanoid } from 'nanoid'
+import appMsgApi from '@/apis/appMsg.api'
+import { getNickName } from '@/utils/nickName'
 
 @Resolver((of) => Record)
 export class RecordMutation {
@@ -46,13 +48,16 @@ export class RecordMutation {
 
     // line訊息
     const to = [process.env.KAROL_USERID!]
-    const text = `${repo.ctx.user?.displayName}結算紀錄 →\n總金額 $${amount}`
+    const nickName = getNickName(repo.ctx.user?.email)
+    const text = `${nickName}結算紀錄 →\n總金額 $${amount}`
     const message: Message = { type: 'text', text }
     await LINE.multicast(to, message)
     // line log
     const lineLog = new LineLog(nanoid(), to, message, LineActionEnum.multicast)
     const lineLogRepo = getRepository(LineLog)
     await lineLogRepo.save(lineLog)
+    // app msg
+    await appMsgApi.send(text)
 
     return recordArray
   }

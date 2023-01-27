@@ -5,8 +5,11 @@ import { Record, RecordRepository, Repo, AmountByMonth } from '@entity/record'
 export class RecordQuery {
   @Authorized()
   @Query((returns) => [Record], { description: '依條件取得' })
-  async records(@Repo() repo: RecordRepository): Promise<Record[]> {
+  async records(@Repo() repo: RecordRepository, @Arg('isClosed') isClosed: boolean): Promise<Record[]> {
     const query = repo.queryBuilder()
+    if(isClosed !== undefined) {
+      query.andWhere('Record.isClosed = :isClosed', { isClosed })
+    }
     return query.getMany()
   }
 

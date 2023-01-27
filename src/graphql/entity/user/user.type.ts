@@ -5,6 +5,7 @@ import { Event } from '@entity/event'
 import { UserRoleEnum } from '@graphql/enum'
 import { Notification } from '@entity/notification'
 import { RecordLog } from '@entity/recordLog'
+import { Record } from '@entity/record'
 
 @Entity()
 @ObjectType({ description: '使用者', implements: Basic })
@@ -48,6 +49,10 @@ export class User extends Basic {
   @OneToMany((type) => RecordLog, (recordLog) => recordLog.user)
   @Field((type) => [RecordLog], { description: '紀錄Logs' })
   recordLogs: RecordLog[]
+
+  @OneToMany((type) => Record, (record) => record.user)
+  @Field((type) => [Record], { description: '記帳紀錄' })
+  records: Record[]
 
   // @ManyToMany((type) => Notification, (notif) => notif.users)
   // @JoinTable({ name: 'users_notifs' })

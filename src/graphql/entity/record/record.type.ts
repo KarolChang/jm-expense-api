@@ -7,9 +7,9 @@ import { RecordLog } from '@entity/recordLog'
 @Entity()
 @ObjectType({ description: '紀錄', implements: Basic })
 export class Record extends Basic {
-  @Column({ type: 'date' })
+  @Column({length: 10})
   @Field({ description: '日期' })
-  date: Date
+  date: string
 
   @Column()
   @Field({ description: '項目' })
@@ -46,7 +46,7 @@ export class RecordInput implements Partial<Record> {
   id: number
 
   @Field({ description: '日期' })
-  date: Date
+  date: string
 
   @Column()
   @Field({ description: '項目' })
@@ -57,6 +57,9 @@ export class RecordInput implements Partial<Record> {
 
   @Field({ description: '金額' })
   amount: number
+
+  @Field({ description: '是否已結算' })
+  isClosed: boolean
 
   @Field((type) => UserInput, { description: '紀錄創建者' })
   user: User

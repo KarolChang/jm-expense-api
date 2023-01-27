@@ -1,7 +1,7 @@
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm'
 import { Log } from '@entity/log'
 import { Container } from 'typedi'
-import { LineMsg } from '@entity/LineMsg'
+import { MsgInfo } from '@/graphql/entity/MsgInfo'
 import { Record } from '@entity/record'
 
 type AllEvent<T> = UpdateEvent<T> | InsertEvent<T> | RemoveEvent<T>
@@ -24,28 +24,28 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
   async afterInsert(event: InsertEvent<any>) {
     if (event.entity && event.entity.constructor.name !== 'Object') {
       await this.addLog(event, 'INSERT')
-      await this.pushLineMsg(event, 'INSERT')
+      await this.pushMsg(event, 'INSERT')
     }
   }
 
   async afterUpdate(event: UpdateEvent<any>) {
     if (event.entity && event.entity.constructor.name !== 'Object') {
       await this.addLog(event, 'UPDATE')
-      await this.pushLineMsg(event, 'UPDATE')
+      await this.pushMsg(event, 'UPDATE')
     }
   }
 
   async afterSoftRemove(event: RemoveEvent<any>) {
     if (event.entity && event.entity.constructor.name !== 'Object') {
       await this.addLog(event, 'SOFT_REMOVE')
-      await this.pushLineMsg(event, 'SOFT_REMOVE')
+      await this.pushMsg(event, 'SOFT_REMOVE')
     }
   }
 
   async afterRemove(event: RemoveEvent<any>) {
     if (event.entity && event.entity.constructor.name !== 'Object') {
       await this.addLog(event, 'REMOVE')
-      await this.pushLineMsg(event, 'REMOVE')
+      await this.pushMsg(event, 'REMOVE')
     }
   }
 
@@ -65,11 +65,11 @@ export class BasicEventSubscriber implements EntitySubscriberInterface<any> {
     }
   }
 
-  async pushLineMsg(event: AllEvent<any>, action: 'INSERT' | 'UPDATE' | 'SOFT_REMOVE' | 'REMOVE') {
-    const serviceName = `${event.entity.constructor.name}_LineMsg`
+  async pushMsg(event: AllEvent<any>, action: 'INSERT' | 'UPDATE' | 'SOFT_REMOVE' | 'REMOVE') {
+    const serviceName = `${event.entity.constructor.name}_Msg`
     let message
     try {
-      message = Container.get(serviceName) as LineMsg<any>
+      message = Container.get(serviceName) as MsgInfo<any>
     } catch (error) {
       // 找不到對應的 serviceName 時，進到這裡
     }
