@@ -17,4 +17,4 @@ COPY . /app
 # EXPOSE 24000
 
 # docker run
-CMD npm run dev
+CMD npm start
