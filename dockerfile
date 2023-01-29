@@ -16,5 +16,7 @@ COPY . /app
 # port
 # EXPOSE 24000
 
+RUN npm run build
+
 # docker run
 CMD npm start
