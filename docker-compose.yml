@@ -22,6 +22,7 @@ services:
     ports:
       - $LOCAL_PORT:$DOCKER_PORT
     environment:
+      - NODE_ENV=production
       - TYPEORM_URL=mysql://root:password@mysqldb:3306/jm-expense-api
     stdin_open: true
     tty: true

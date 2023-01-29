@@ -10,7 +10,8 @@ import { initSchedule } from '@graphql/schedule'
 import { nanoid } from 'nanoid'
 import { useExpressServer } from 'routing-controllers'
 import path from 'path'
-import cors from 'cors'
+import https from 'https'
+import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -42,7 +43,7 @@ async function main() {
     emitSchemaFile: true,
     authChecker: customAuthChecker
   })
-  const server = new ApolloServer({
+  let server = new ApolloServer({
     schema,
     context: ({ req }) => {
       const context: CustomContext = {
@@ -77,14 +78,23 @@ async function main() {
 
   console.log('Step3: Schedules Success Initialize......')
 
+  // ssl
+  let appServer:any = app
+  if(isProd) {
+    const privateKey = fs.readFileSync(__dirname + '/ssl/private.key')
+    const certificate = fs.readFileSync(__dirname + '/ssl/certificate.crt')
+    const credentials = { key: privateKey, cert: certificate }
+    appServer = https.createServer(credentials, app)
+  }
+
   const PORT = process.env.DOCKER_PORT
-  app.listen(PORT, () => {
+  appServer.listen(PORT, () => {
     console.log(`Step4: Server has started at http://localhost:${PORT}/graphql`)
     // Launch Time
     const finishTime = new Date()
     const time = finishTime.getTime() - startTime.getTime()
     console.log(`[Launch Time] duration: ${time}ms`)
-    console.log(`[Now Time] ${new Date().toLocaleString()}`)
+    console.log(`[Now Time] ${new Date().toLocaleString()}`)   
   })
 }
 main()

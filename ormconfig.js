@@ -1,6 +1,6 @@
 module.exports = {
   type: 'mysql',
-  url: process.env.JAWSDB_URL,
+  url: process.env.TYPEORM_URL,
   synchronize: true,
   logging: false,
   entities: ['dist/graphql/entity/**/*.js', 'dist/graphql/services/**/*.js'],
