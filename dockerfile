@@ -5,13 +5,13 @@ WORKDIR /app
 # ADD . /app
 
 # install package
-COPY ./package.json ./package-lock.json /app/
+COPY ./package.json ./package-lock.json ./tsconfig.json ./
 
 # docker build
 RUN npm i --legacy-peer-deps
 
-# COPY . /app
-COPY . /app
+# COPY . .
+COPY . .
 
 # port
 # EXPOSE 24000
@@ -19,4 +19,4 @@ COPY . /app
 RUN npm run build
 
 # docker run
-CMD npm start
+CMD ["npm", "start"]
