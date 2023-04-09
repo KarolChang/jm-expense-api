@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./package.json ./package-lock.json ./tsconfig.json ./
 
 # docker build
-RUN npm i --legacy-peer-deps
+RUN npm i
 
 # COPY . .
 COPY . .
@@ -16,7 +16,7 @@ COPY . .
 # port
 # EXPOSE 24000
 
-RUN npm run build
+# RUN npm run build
 
 # docker run
-CMD ["npm", "start"]
+CMD ["npm", "run", "serve"]
