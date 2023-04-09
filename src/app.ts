@@ -80,12 +80,12 @@ async function main() {
 
   // ssl
   let appServer:any = app
-  if(isProd) {
-    const privateKey = fs.readFileSync(__dirname + '/ssl/private.key')
-    const certificate = fs.readFileSync(__dirname + '/ssl/certificate.crt')
-    const credentials = { key: privateKey, cert: certificate }
-    appServer = https.createServer(credentials, app)
-  }
+  // if(isProd) {
+  //   const privateKey = fs.readFileSync(__dirname + '/ssl/private.key')
+  //   const certificate = fs.readFileSync(__dirname + '/ssl/certificate.crt')
+  //   const credentials = { key: privateKey, cert: certificate }
+  //   appServer = https.createServer(credentials, app)
+  // }
 
   const PORT = process.env.DOCKER_PORT
   appServer.listen(PORT, () => {
